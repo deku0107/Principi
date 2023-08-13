@@ -38,5 +38,6 @@ public class Data {
         this.mese= Integer.parseInt(dati[1]);
         this.giorno= Integer.parseInt(dati[2]);
 
+
     }
 }

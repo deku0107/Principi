@@ -114,6 +114,7 @@ public class ManagerDao implements IUtentiDao
             ArrayList<Utente> utenti= new ArrayList<>();
            while (rs.next()){
                 Manager utente = new Manager();
+                utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
                 utente.setEmail(rs.getString(("email")));
@@ -123,8 +124,10 @@ public class ManagerDao implements IUtentiDao
                 Data data=new Data();
                 data.setData(rs.getString("data_nascita"));
                 utente.setDataDiNascita(data);
-                data.setData(rs.getString("inizio_inarico"));
+                data=new Data();
+                data.setData(rs.getString("inizio_incarico"));
                 utente.setInizioIncarico(data);
+                data=new Data();
                 data.setData(rs.getString("fine_incarico"));
                 utente.setFineIncarico(data);
                 utente.setStipendio(rs.getFloat("salario"));

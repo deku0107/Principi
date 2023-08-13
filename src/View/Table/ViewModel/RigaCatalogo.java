@@ -1,4 +1,4 @@
-package View.ViewModel;
+package View.Table.ViewModel;
 
 public class RigaCatalogo {
 

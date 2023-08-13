@@ -18,7 +18,6 @@ public class UtenteAcquirenteMenuDecorator extends CustomMenuDecorator{
         pulsanti.remove(pulsanti.size()-1);
 
 
-        System.out.println(Arrays.toString(pulsanti.get(0).getActionListeners()));
 
         // + le funzioni del cliente
         JButton liste = new JButton("Le mie liste");

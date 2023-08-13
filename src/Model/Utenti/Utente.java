@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Utente {
+
+private String id;
 private String username;
 private String nome;
 private String cognome;
@@ -14,6 +16,14 @@ private String telefono;
 private String indirizzo;
 private String citta;
 private Data dataDiNascita;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

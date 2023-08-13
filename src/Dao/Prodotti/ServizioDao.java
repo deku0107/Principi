@@ -62,6 +62,33 @@ public class ServizioDao implements IArticoloDao{
         }
         return null;
     }
+    public ArrayList<Articolo> findArticolo() {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'servizio';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Articolo> articoli= new ArrayList<>();
+            while (rs.next()){
+                Servizio prodotto = new Servizio();
+                prodotto.setId(rs.getString("idarticolo"));
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                prodotto.setDescrizione(rs.getString("descrizione"));
+                articoli.add(prodotto);
+
+            }
+            return articoli;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
 
 
     @Override

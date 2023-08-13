@@ -1,31 +1,47 @@
 package View;
 
-import View.ViewModel.RigaCatalogo;
+import Dao.Prodotti.ProdottoDao;
+import Model.Prodotti.Articolo;
+import Model.Prodotti.Prodotto;
+import View.Table.ViewModel.RigaCatalogo;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoPanel extends JPanel {
 
+    private JPanel mainList;
     public CatalogoPanel(){
 
-
+         mainList= new JPanel(new GridBagLayout());
         setLayout(new BorderLayout());
-        String[][] dati= new String[3][5];
-        String[] nomiColonne= new String[] {"Colonna 1", "Colonna 2", "Colonna 3", "Colonna 4", "Colonna 5"};
-        //JTable tabella= new JTable(dati, nomiColonne);
-
-        List<RigaCatalogo> righe = new ArrayList<RigaCatalogo>();
-
-        //prendere i dati dal dao e fare righe.add(riga) per ogni riga del dao
-
-        CatalogoTableModel catalogoTableModel= new CatalogoTableModel(righe);
 
 
-        JTable tabella = new JTable(catalogoTableModel);
-        JScrollPane scrollPane= new JScrollPane(tabella);
+
+        List<Articolo> articoli= ProdottoDao.getInstance().findArticolo();
+
+        int i=1;
+        for (Articolo articolo:articoli){
+            GridBagLayoutPanel gridBagLayoutPanel=new GridBagLayoutPanel();
+
+            gridBagLayoutPanel.updateData(articolo);
+
+            JPanel panel = new JPanel();
+
+            panel.add(gridBagLayoutPanel);
+            panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gbc.weightx = 1;
+            gbc.weighty = i++;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            mainList.add(panel, gbc, 0);
+        }
+
+        JScrollPane scrollPane= new JScrollPane(mainList);
         add(scrollPane, BorderLayout.CENTER);
 
     }

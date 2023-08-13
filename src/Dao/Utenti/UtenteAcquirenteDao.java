@@ -32,6 +32,7 @@ public class UtenteAcquirenteDao implements IUtentiDao {
             rs.next();
             if(rs.getRow()==1){
                 UtenteAcquirente utente = new UtenteAcquirente();
+                utente.setId(rs.getString("id"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
@@ -67,6 +68,7 @@ public class UtenteAcquirenteDao implements IUtentiDao {
             rs.next();
             if(rs.getRow()==1){
                 UtenteAcquirente utente = new UtenteAcquirente();
+                utente.setId(rs.getString("id"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
@@ -103,6 +105,7 @@ public class UtenteAcquirenteDao implements IUtentiDao {
            while (rs.next())
             {
                 UtenteAcquirente utente = new UtenteAcquirente();
+                utente.setId(rs.getString("id"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));

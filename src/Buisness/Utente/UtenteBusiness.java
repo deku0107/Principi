@@ -13,6 +13,7 @@ import Model.Utenti.UtenteAcquirente;
 
 import javax.swing.*;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Random;
 
 public  class UtenteBusiness {
@@ -86,6 +87,7 @@ public  class UtenteBusiness {
 
         AbstractFactoryUtente abstractFactoryUtente =  FactoryProviderUtente.getFactory(tipo, username);
         Utente u = abstractFactoryUtente.crea();
+        SessionManager.getSession().remove(SessionManager.GUEST);
         SessionManager.getSession().put(SessionManager.LOGGED_USER, u);
 
         loginResult.setResult(LoginResult.Result.LOGIN_OK);
@@ -135,6 +137,7 @@ public  class UtenteBusiness {
 
         AbstractFactoryUtente abstractFactoryUtente =  FactoryProviderUtente.getFactory(tipo, username);
         Utente u = abstractFactoryUtente.crea();
+        SessionManager.getSession().remove(SessionManager.GUEST);
         SessionManager.getSession().put(SessionManager.LOGGED_MANAGER, u);
 
         loginResult.setResult(LoginResult.Result.LOGIN_OK);
@@ -175,6 +178,7 @@ public  class UtenteBusiness {
 
         AbstractFactoryUtente abstractFactoryUtente =  FactoryProviderUtente.getFactory(tipo, username);
         Utente u = abstractFactoryUtente.crea();
+        SessionManager.getSession().remove(SessionManager.GUEST);
         SessionManager.getSession().put(SessionManager.LOGGED_ADMIN, u);
 
         loginResult.setResult(LoginResult.Result.LOGIN_OK);
@@ -288,6 +292,10 @@ public  class UtenteBusiness {
            System.out.println("sto ritornando null");
         return null;
     }
+
+       public List<Utente> getUtentiAcquirenti(){
+            return UtenteAcquirenteDao.getInstance().findAll();
+       }
 
 
 

@@ -10,6 +10,7 @@ public interface ICategoriaDao {
     int addCategoria(Object categoria);
     Categoria findCategoria(String id);
     ArrayList<Categoria> findCategoriaByName(String nome);
+    ArrayList<Categoria> findAll();
     int update(Object categoria);
     int remove(String id);
 

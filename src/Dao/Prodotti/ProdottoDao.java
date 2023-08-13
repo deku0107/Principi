@@ -31,7 +31,7 @@ public class ProdottoDao implements IArticoloDao {
             System.out.println("L'oggetto passato non appartiene alla classe Prodotto");
             return -2;
         }
-        String sql="INSERT INTO `mydb`.`articolo` (`nome`, `prezzo`, `produttore`, `categoria`, `descrizione`) VALUES ('"+prodotto.getNome()+"', '"+prodotto.getPrezzo()+"', '"+prodotto.getProduttore().getId()+"', '"+prodotto.getCategoria().getId()+"', '"+prodotto.getDescrizione()+"');";
+        String sql="INSERT INTO `mydb`.`articolo` (`nome`, `prezzo`, `produttore`, `categoria`, `descrizione`, `corsia`, `scaffale`) VALUES ('"+prodotto.getNome()+"', '"+prodotto.getPrezzo()+"', '"+prodotto.getProduttore().getId()+"', '"+prodotto.getCategoria().getId()+"', '"+prodotto.getDescrizione()+"', '"+prodotto.getCorsia()+"', '"+prodotto.getScaffale()+"');";
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);
         rowCount=executor.updateOperation(writeOp);
@@ -120,6 +120,46 @@ public class ProdottoDao implements IArticoloDao {
                 prodotto.setNome(rs.getString("nome"));
                 prodotto.setPrezzo(rs.getFloat("prezzo"));
                 prodotto.setProduttore(produttore);
+                Categoria categoria= new Categoria();
+                categoria.setId(rs.getString("categoria"));
+                prodotto.setCategoria(categoria);
+                prodotto.setDescrizione(rs.getString("descrizione"));
+
+                articoli.add(prodotto);
+
+            }
+            return articoli;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+    public ArrayList<Articolo> findArticolo() {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo='prodotto';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Articolo> articoli= new ArrayList<>();
+            while (rs.next()){
+                Prodotto prodotto = new Prodotto();
+                prodotto.setId(rs.getString("idarticolo"));
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                String tmp = rs.getString("produttore");
+                if(tmp==null){
+                    prodotto.setProduttore(null);
+                }else{
+                    Produttore produttore = new Produttore();  //produttoredao.findproduttore
+                    produttore.setId(tmp);
+                    prodotto.setProduttore(produttore);
+                }
                 Categoria categoria= new Categoria();
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);

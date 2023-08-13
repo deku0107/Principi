@@ -10,10 +10,8 @@ import Model.Data;
 import Model.Utenti.Manager;
 import Model.Utenti.Utente;
 import Model.Utenti.UtenteAcquirente;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

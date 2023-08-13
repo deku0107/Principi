@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class UtenteAcquirente extends Utente {
 
-    private enum Stato{ATTIVO, BLOCCATO, ELIMINATO}
+    public static enum Stato{ATTIVO, BLOCCATO, ELIMINATO}
     private Stato stato;
     private ArrayList<ListaDiAcquisto> listeDiAcquisto;
 
@@ -14,6 +14,14 @@ public class UtenteAcquirente extends Utente {
 
     public Stato getStato() {
         return stato;
+    }
+    public String getStatoString(){
+        if(stato==Stato.ATTIVO){
+            return "attivo";
+        }else if(stato==Stato.BLOCCATO){
+            return "bloccato";
+        }else{return "eliminato";}
+
     }
 
     public void setStato(Stato stato) {

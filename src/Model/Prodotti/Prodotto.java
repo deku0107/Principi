@@ -7,6 +7,8 @@ public class Prodotto extends Articolo{
 
     private Produttore produttore;
     private Categoria categoria;
+    private int scaffale;
+    private int corsia;
 
     public Produttore getProduttore() {
         if (produttore==null)
@@ -26,5 +28,21 @@ public class Prodotto extends Articolo{
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public int getScaffale() {
+        return scaffale;
+    }
+
+    public void setScaffale(int scaffale) {
+        this.scaffale = scaffale;
+    }
+
+    public int getCorsia() {
+        return corsia;
+    }
+
+    public void setCorsia(int corsia) {
+        this.corsia = corsia;
     }
 }

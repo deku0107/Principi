@@ -65,12 +65,9 @@ public class CategoriaDao implements ICategoriaDao{
                 categoria.setNome(rs.getString("nome"));
                 categoria.setDescrizione(rs.getString("descrizione"));
                 String tmp= rs.getString("categoria");
-               System.out.println("Categoria" + tmp);
-                if(tmp==null){
-                    categoria.setCategoriaPadre(null);
-                }else {
-                    categoria.setCategoriaPadre(findCategoria(tmp));
-                }
+               Categoria categoria1= new Categoria();
+               categoria1.setId(tmp);
+               categoria.setCategoriaPadre(categoria1);
 
                 return categoria;
             }
@@ -99,12 +96,41 @@ public class CategoriaDao implements ICategoriaDao{
                 categoria.setId(rs.getString("idcategoria"));
                 categoria.setDescrizione(rs.getString("descrizione"));
                 String tmp= rs.getString("categoria");
-                if(tmp==null){
-                    categoria.setCategoriaPadre(null);
-                }else {
+                Categoria categoria1= new Categoria();
+                categoria1.setId(tmp);
+                categoria.setCategoriaPadre(categoria1);
 
-                    categoria.setCategoriaPadre(findCategoria(tmp));
-                }
+                categorie.add(categoria);
+            }
+            return categorie;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Categoria> findAll() {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.categoria;");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Categoria> categorie= new ArrayList<>();
+            while (rs.next()){
+                Categoria categoria= new Categoria();
+                categoria.setId(rs.getString("idcategoria"));
+                categoria.setNome(rs.getString("nome"));
+                categoria.setDescrizione(rs.getString("descrizione"));
+                String tmp= rs.getString("categoria");
+                Categoria categoria1= new Categoria();
+                categoria1.setId(tmp);
+                categoria.setCategoriaPadre(categoria1);
 
                 categorie.add(categoria);
             }
