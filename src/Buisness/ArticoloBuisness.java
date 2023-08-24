@@ -3,9 +3,14 @@ package Buisness;
 import Dao.Prodotti.ArticoloCompositoDao;
 import Dao.Prodotti.ProdottoDao;
 import Dao.Prodotti.ServizioDao;
+import Dao.PuntoVendita.OffertaDAO;
+import Dao.PuntoVendita.PuntoVenditaDao;
 import Model.Categoria;
 import Model.Prodotti.*;
 import Model.Produttore;
+import Model.PuntoVendita;
+import Model.Utenti.Manager;
+import Model.Utenti.UtenteAcquirente;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -19,7 +24,58 @@ public class ArticoloBuisness {
 
 
     public List<Articolo> getProdotti(){
-        return ProdottoDao.getInstance().findArticolo();
+        List<Articolo> articoloList= ProdottoDao.getInstance().findArticolo();
+        List<Articolo> articoloList1=ArticoloCompositoDao.getInstance().findArticolo();
+        articoloList.addAll(articoloList1);
+        return articoloList;
+    }
+
+    public List<Articolo> getCatalogo(){
+
+        UtenteAcquirente utenteAcquirente= (UtenteAcquirente) SessionManager.getSession().get(SessionManager.LOGGED_USER);
+
+        String idPuntoVendita= utenteAcquirente.getPuntoVendita().getId();
+        System.out.println("Id punto vendita " + idPuntoVendita);
+
+        return OffertaDAO.getInstance().getOfferta(idPuntoVendita);
+
+    }
+    public List<Articolo> getCatalogo(String id){
+
+
+        return OffertaDAO.getInstance().getOfferta(id);
+
+    }
+    public List<Articolo> getCatalogoInverso(String idPuntoVendita) {
+        List<Articolo>catalogo= OffertaDAO.getInstance().getOfferta(idPuntoVendita);
+        List<Articolo> articoloList= getProdotti();
+        List<Articolo> r = new ArrayList<>();
+        String tmp;
+        for(Articolo a: articoloList){
+            tmp=a.getId();
+            boolean check=true;
+            for (Articolo b:catalogo){
+                if (b.getId().equalsIgnoreCase(tmp)) {
+                    check = false;
+                    break;
+                }
+            }
+            if(check)
+                r.add(a);
+        }
+        return r;
+    }
+
+    public List<Articolo> getCatalogoManager(){
+
+        Manager manager = (Manager) SessionManager.getSession().get(SessionManager.LOGGED_MANAGER);
+
+        System.out.println("Id manager " + manager.getId());
+        PuntoVendita puntoVendita= PuntoVenditaDao.getInstance().findByManager(manager.getId());
+        System.out.println("Id punto vendita " + puntoVendita.getId());
+
+        return OffertaDAO.getInstance().getOfferta(puntoVendita.getId());
+
     }
 
     public JComboBox getProdottiBox(){
@@ -85,6 +141,75 @@ public class ArticoloBuisness {
         return ArticoloCompositoDao.getInstance().addArticolo(articoloComposito);
 
     }
+
+    public String getNome(Object b){
+        Articolo a= (Articolo) b;
+        return a.getNome();
+
+    }
+    public String geIdArticolo(Object b){
+        Articolo a= (Articolo) b;
+        return a.getId();
+
+    }
+
+    public String getDescrizione(Object b){
+        Articolo a= (Articolo) b;
+        return a.getDescrizione();
+
+    }
+
+    public Float getPrezzo(Object b){
+        Articolo a= (Articolo) b;
+        return a.getPrezzo();
+
+    }
+
+    //immagini
+
+    //Servizi
+
+    //Prodotti
+    public Categoria getCategoria(Object b){
+        Prodotto p= (Prodotto) b;
+        return p.getCategoria();
+
+    }
+
+    public Produttore getProduttore(Object b){
+        Prodotto p= (Prodotto) b;
+        return p.getProduttore();
+
+    }
+
+    public int getScaffale(Object b){
+        Prodotto p = (Prodotto) b;
+        return p.getScaffale();
+
+    }
+
+    public int getCorsia(Object b){
+        Prodotto p = (Prodotto) b;
+        return p.getCorsia();
+
+    }
+
+    public int getQuantita(Object b){
+        Prodotto p = (Prodotto) b;
+        return p.getQuantita();
+
+    }
+
+    public int setPosizione(String idProdotto, int corsia, int scaffale) {
+
+        return ProdottoDao.getInstance().setPosizione(idProdotto, corsia, scaffale);
+
+    }
+
+
+
+    //Prodotti Compositi
+
 
 
 }

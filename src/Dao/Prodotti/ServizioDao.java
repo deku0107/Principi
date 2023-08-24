@@ -35,23 +35,23 @@ public class ServizioDao implements IArticoloDao{
     }
 
     @Override
-    public ArrayList<Articolo> findArticolo(String id) {
+    public Articolo findArticolo(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'servizio' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
-            ArrayList<Articolo> articoli= new ArrayList<>();
-            while (rs.next()){
+            rs.next();
+            if (rs.getRow()==1){
                 Servizio prodotto = new Servizio();
                 prodotto.setId(rs.getString("idarticolo"));
                 prodotto.setNome(rs.getString("nome"));
                 prodotto.setPrezzo(rs.getFloat("prezzo"));
                 prodotto.setDescrizione(rs.getString("descrizione"));
-                articoli.add(prodotto);
+                return prodotto;
 
             }
-            return articoli;
+            return null;
 
         }catch (SQLException e ){
             System.out.println("SQL exception:  " + e.getMessage());

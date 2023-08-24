@@ -41,14 +41,14 @@ public class ProdottoDao implements IArticoloDao {
     }
 
     @Override
-    public ArrayList<Articolo> findArticolo(String id) {
+    public Articolo findArticolo(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
-            ArrayList<Articolo> articoli= new ArrayList<>();
-            while (rs.next()){
+            rs.next();
+            if (rs.getRow()==1){
                 Prodotto prodotto = new Prodotto();
                 prodotto.setId(rs.getString("idarticolo"));
                 prodotto.setNome(rs.getString("nome"));
@@ -61,10 +61,10 @@ public class ProdottoDao implements IArticoloDao {
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
 
-                articoli.add(prodotto);
+                return prodotto;
 
             }
-            return articoli;
+            return null;
 
         }catch (SQLException e ){
             System.out.println("SQL exception:  " + e.getMessage());
@@ -239,6 +239,19 @@ public class ProdottoDao implements IArticoloDao {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);
         rowCount = executor.updateOperation(writeOp);
+        return rowCount;
+    }
+
+    public int setPosizione(String idArticolo,  int corsia, int scaffale) {
+
+        String sql = "UPDATE `mydb`.`articolo` SET `corsia` = '"+corsia+"', `scaffale` = '"+scaffale+"' WHERE (`idarticolo` = '"+idArticolo+"') ;";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
         return rowCount;
     }
 }

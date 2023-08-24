@@ -4,7 +4,7 @@ import Buisness.AbstractFactory.AbstractFactoryUtente.FactoryProviderUtente;
 import Buisness.Utente.LoginResult;
 import Buisness.Utente.PasswordResult;
 import Buisness.Utente.UtenteBusiness;
-import View2.Login.Main;
+import ViewSceneBuilder.Login.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -63,12 +63,6 @@ public class UtenteLogin {
         }
     }
 
-    public void forgottenPasswordListener(ActionEvent actionEvent) {
-        //pagina ripristino password
-        String email=JOptionPane.showInputDialog("Inserire l'email");
-        PasswordResult result=UtenteBusiness.getInstance().resetPsw(email);
-
-    }
 
     public void managerListenerLogin(ActionEvent actionEvent) {
         //pagina login manager

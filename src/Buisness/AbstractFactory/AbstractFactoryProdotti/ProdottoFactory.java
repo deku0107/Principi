@@ -8,7 +8,7 @@ public class ProdottoFactory implements AbstractFactory {
     public Articolo crea(String id) {
         ProdottoDao articoloDao=ProdottoDao.getInstance();
 
-        return articoloDao.findArticolo(id).get(0);
+        return articoloDao.findArticolo(id);
     }
 
 }

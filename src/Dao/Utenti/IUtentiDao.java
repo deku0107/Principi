@@ -14,4 +14,6 @@ public interface IUtentiDao {
     boolean controlloCredenziali(String usr, String password);
     boolean controlloCredenziali(String email);
     int removeByUsername(String usr);
+
+    Utente findByEmail(String email);
 }

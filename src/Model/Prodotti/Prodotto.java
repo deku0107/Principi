@@ -9,6 +9,15 @@ public class Prodotto extends Articolo{
     private Categoria categoria;
     private int scaffale;
     private int corsia;
+    private int quantita;
+
+    public int getQuantita() {
+        return quantita;
+    }
+
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
+    }
 
     public Produttore getProduttore() {
         if (produttore==null)

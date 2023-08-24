@@ -34,8 +34,8 @@ public class CategoriaDao implements ICategoriaDao{
         if(((Categoria) categoria).getCategoriaPadre()==null){
             sql="INSERT INTO `mydb`.`categoria` (`nome`, `descrizione`) VALUES ('"+((Categoria) categoria).getNome() + "', '"+((Categoria) categoria).getDescrizione()+"');";
         }else{
-            String id=((Categoria) categoria).getId();
-            sql = "INSERT INTO `mydb`.`categoria` (`nome`, `descrizione`, `categoria`) VALUES ('" + ((Categoria) categoria).getNome() + "', '" + ((Categoria) categoria).getDescrizione() + "', '" + id + "');";
+
+            sql = "INSERT INTO `mydb`.`categoria` (`nome`, `descrizione`, `categoria`) VALUES ('" + ((Categoria) categoria).getNome() + "', '" + ((Categoria) categoria).getDescrizione() + "', '" + ((Categoria) categoria).getCategoriaPadre().getId() + "');";
         }
 
         DbOperationeExecutor executor = new DbOperationeExecutor();
@@ -155,8 +155,8 @@ public class CategoriaDao implements ICategoriaDao{
         }
 
         String sql;
-        if(((Categoria) categoria).getCategoriaPadre()==null){
-            String id=((Categoria) categoria).getId();
+        if(((Categoria) categoria).getCategoriaPadre()!=null){
+            String id=((Categoria) categoria).getCategoriaPadre().getId();
             sql = "UPDATE `mydb`.`categoria` SET `nome` = '"+((Categoria) categoria).getNome()+"', `descrizione` = '"+((Categoria) categoria).getDescrizione()+"', `categoria` = '"+id+"' WHERE (`idcategoria` = '"+((Categoria) categoria).getId()+"');";
 
         }else{

@@ -1,5 +1,6 @@
 package Dao.PuntoVendita;
 
+import Buisness.SessionManager;
 import DBInterface.command.DbOperationeExecutor;
 import DBInterface.command.IDbOperation;
 import DBInterface.command.ReadOperation;
@@ -30,6 +31,7 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
             rs.next();
             if(rs.getRow()==1){
                 PuntoVendita puntoVendita = new PuntoVendita();
+                puntoVendita.setId(rs.getString("idpunto_vendita"));
                 puntoVendita.setNome(rs.getString("nome"));
                 puntoVendita.setEmail(rs.getString(("email")));
                 puntoVendita.setTelefono(rs.getString(("telefono")));
@@ -51,6 +53,38 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
     }
 
     @Override
+    public PuntoVendita findByManager(String id) {
+        String sql ="SELECT * FROM mydb.punto_vendita where manager='"+id+"';";
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation(sql);
+        rs = executor.executeOperation(readOp);
+        try {
+            rs.next();
+            if(rs.getRow()==1){
+                PuntoVendita puntoVendita = new PuntoVendita();
+                puntoVendita.setId(rs.getString("idpunto_vendita"));
+                puntoVendita.setNome(rs.getString("nome"));
+                puntoVendita.setEmail(rs.getString(("email")));
+                puntoVendita.setTelefono(rs.getString(("telefono")));
+                puntoVendita.setIndirizzo(rs.getString(("indirizzo")));
+                puntoVendita.setCitta(rs.getString(("citta")));
+                puntoVendita.setManager(ManagerDao.getInstance().findById(rs.getString("manager")));
+
+                return puntoVendita;
+            }
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+
+
+    @Override
     public ArrayList<PuntoVendita> findByName(String name) {
 
         DbOperationeExecutor executor = new DbOperationeExecutor();
@@ -60,6 +94,7 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
             ArrayList<PuntoVendita> puntiVendita= new ArrayList<>();
             while (rs.next()){
                 PuntoVendita puntoVendita = new PuntoVendita();
+                puntoVendita.setId(rs.getString("idpunto_vendita"));
                 puntoVendita.setNome(rs.getString("nome"));
                 puntoVendita.setEmail(rs.getString(("email")));
                 puntoVendita.setTelefono(rs.getString(("telefono")));
@@ -92,6 +127,7 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
             ArrayList<PuntoVendita> puntiVendita= new ArrayList<>();
             while (rs.next()){
                 PuntoVendita puntoVendita = new PuntoVendita();
+                puntoVendita.setId(rs.getString("idpunto_vendita"));
                 puntoVendita.setNome(rs.getString("nome"));
                 puntoVendita.setEmail(rs.getString(("email")));
                 puntoVendita.setTelefono(rs.getString(("telefono")));
@@ -118,7 +154,9 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
     @Override
     public int add(PuntoVendita puntoVendita) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation writeOp = new WriteOperation("INSERT INTO `mydb`.`punto_vendita` ( `nome`,  `email`, `telefono`, `indirizzo`, `manager`) VALUES ('"+puntoVendita.getNome()+"', '"+puntoVendita.getEmail()+"', '"+puntoVendita.getTelefono()+"', '"+puntoVendita.getIndirizzo()+"', '"+puntoVendita.getCitta()+"', '"+ puntoVendita.getManager().getId()+"');");
+        String sql="INSERT INTO `mydb`.`punto_vendita` ( `nome`,  `email`, `telefono`, `indirizzo`, `citta`, `manager`) VALUES ('"+puntoVendita.getNome()+"', '"+puntoVendita.getEmail()+"', '"+puntoVendita.getTelefono()+"', '"+puntoVendita.getIndirizzo()+"', '"+puntoVendita.getCitta()+"', '"+ puntoVendita.getManager().getId()+"');";
+        System.out.println(sql);
+        IDbOperation writeOp = new WriteOperation(sql);
         rowCount=executor.updateOperation(writeOp);
         if(rowCount<0)
             return -1;
@@ -151,8 +189,15 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
     public int UpdateManager(PuntoVendita puntoVendita, Manager m) {
         String sql = "UPDATE `mydb`.`punto_vendita` SET `manager` = '"+m.getId()+"' WHERE (`idpunto_vendita` = '"+puntoVendita.getId()+"');";
 
-        return 0;
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
+        return rowCount;
     }
+
 
 
 }

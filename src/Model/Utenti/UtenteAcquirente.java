@@ -1,6 +1,7 @@
 package Model.Utenti;
 
 import Model.ListaDiAcquisto;
+import Model.PuntoVendita;
 
 import java.util.ArrayList;
 
@@ -8,6 +9,7 @@ public class UtenteAcquirente extends Utente {
 
     public static enum Stato{ATTIVO, BLOCCATO, ELIMINATO}
     private Stato stato;
+    private PuntoVendita puntoVendita;
     private ArrayList<ListaDiAcquisto> listeDiAcquisto;
 
 
@@ -34,5 +36,13 @@ public class UtenteAcquirente extends Utente {
 
     public void setListeDiAcquisto(ArrayList<ListaDiAcquisto> listeDiAcquisto) {
         this.listeDiAcquisto = listeDiAcquisto;
+    }
+
+    public PuntoVendita getPuntoVendita() {
+        return puntoVendita;
+    }
+
+    public void setPuntoVendita(PuntoVendita puntoVendita) {
+        this.puntoVendita = puntoVendita;
     }
 }

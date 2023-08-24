@@ -98,4 +98,6 @@ public class DBConnection implements IDbConnection{
             }
         }
     }
+
+    public Connection getConn(){return conn;}
 }

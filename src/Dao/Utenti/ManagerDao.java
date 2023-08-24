@@ -34,6 +34,7 @@ public class ManagerDao implements IUtentiDao
             rs.next();
             if(rs.getRow()==1){
                 Manager utente = new Manager();
+                utente.setId(rs.getString("idmanager"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
@@ -74,6 +75,7 @@ public class ManagerDao implements IUtentiDao
             rs.next();
             if(rs.getRow()==1){
                 Manager utente = new Manager();
+                utente.setId(rs.getString("idmanager"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
@@ -114,6 +116,7 @@ public class ManagerDao implements IUtentiDao
             ArrayList<Utente> utenti= new ArrayList<>();
            while (rs.next()){
                 Manager utente = new Manager();
+                utente.setId(rs.getString("idmanager"));
                 utente.setUsername(rs.getString("username"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
@@ -170,7 +173,7 @@ public class ManagerDao implements IUtentiDao
             return -2;
         }
 
-        String sql = "UPDATE `mydb`.`manager` SET `username` = '"+manager.getUsername()+"', `nome` = '"+manager.getNome()+"', `cognome` = '"+manager.getCognome()+"', `email` = '"+manager.getEmail()+"', `telefono` = '"+manager.getTelefono()+"', `indirizzo` = '"+manager.getIndirizzo()+"', `citta` = '"+manager.getCitta()+"', `data_nascita` = '"+manager.getDataDiNascita().getDataDB()+"', `inizio_incarico` = '"+manager.getInizioIncarico().getDataDB()+"', `fine_incarico` = '"+manager.getFineIncarico().getDataDB()+"', `salario` = '"+manager.getStipendio()+"' WHERE (`username` = '"+manager.getUsername()+"');";
+        String sql = "UPDATE `mydb`.`manager` SET  `nome` = '"+manager.getNome()+"', `cognome` = '"+manager.getCognome()+"', `email` = '"+manager.getEmail()+"', `telefono` = '"+manager.getTelefono()+"', `indirizzo` = '"+manager.getIndirizzo()+"', `citta` = '"+manager.getCitta()+"', `fine_incarico` = '"+manager.getFineIncarico().getDataDB()+"', `salario` = '"+manager.getStipendio()+"' WHERE (`username` = '"+manager.getUsername()+"');";
 
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);
@@ -229,6 +232,18 @@ public class ManagerDao implements IUtentiDao
     public int removeByUsername(String usr) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation("DELETE FROM`mydb`.`manager` WHERE username = '"+usr+"';");
+        rowCount = executor.updateOperation(writeOp);
+        return rowCount;
+    }
+
+    @Override
+    public Utente findByEmail(String email) {
+        return null;
+    }
+
+    public int remove(String id) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation("DELETE FROM`mydb`.`manager` WHERE idmanager = '"+id+"';");
         rowCount = executor.updateOperation(writeOp);
         return rowCount;
     }

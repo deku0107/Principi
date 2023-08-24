@@ -35,6 +35,7 @@ public class ProduttoreDAO implements IProduttoreDAO{
                 produttore.setCitta(rs.getString(("citta")));
                 produttore.setNazione(rs.getString(("nazione")));
                 produttore.setId(id);
+
                 return produttore;
             }
         }catch (SQLException e ){
@@ -112,6 +113,7 @@ public class ProduttoreDAO implements IProduttoreDAO{
     public int update(Produttore produttore) {
 
         String sql="UPDATE `mydb`.`produttore` SET `nome` = '"+produttore.getNome()+"', `sito` = '"+produttore.getSitoWeb()+"', `citta` = '"+produttore.getCitta()+"', `nazione` = '"+produttore.getNazione()+"' WHERE (`idproduttore` = '"+produttore.getId()+"');";
+        System.out.println(sql);
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);
         rowCount=executor.updateOperation(writeOp);

@@ -1,6 +1,5 @@
 package Model;
 
-import Buisness.Utente.UtenteBusiness;
 import Model.Prodotti.Articolo;
 import Model.Utenti.UtenteAcquirente;
 

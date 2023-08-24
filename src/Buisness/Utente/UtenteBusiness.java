@@ -2,10 +2,15 @@ package Buisness.Utente;
 
 import Buisness.AbstractFactory.AbstractFactoryUtente.AbstractFactoryUtente;
 import Buisness.AbstractFactory.AbstractFactoryUtente.FactoryProviderUtente;
+import Buisness.PuntoVenditaBuisness;
 import Buisness.SessionManager;
+import Buisness.UtilityBuisness;
+import Dao.PuntoVendita.PuntoVenditaDao;
 import Dao.Utenti.AmministratoreDao;
 import Dao.Utenti.ManagerDao;
 import Dao.Utenti.UtenteAcquirenteDao;
+import Model.Data;
+import Model.PuntoVendita;
 import Model.Utenti.Amministratore;
 import Model.Utenti.Manager;
 import Model.Utenti.Utente;
@@ -13,6 +18,7 @@ import Model.Utenti.UtenteAcquirente;
 
 import javax.swing.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -150,7 +156,7 @@ public  class UtenteBusiness {
 
         LoginResult loginResult= new LoginResult();
 
-        ManagerDao utenteDao= ManagerDao.getInstance();
+        AmministratoreDao utenteDao= AmministratoreDao.getInstance();
 
         //controllare se l'utente esiste
 
@@ -187,7 +193,7 @@ public  class UtenteBusiness {
         return loginResult;
     }
 
-        public  RegisterResult registrazione(UtenteAcquirente c, String pwd){
+        public RegisterResult registrazione(UtenteAcquirente c, String pwd){
 
             RegisterResult registerResult= new RegisterResult();
 
@@ -225,31 +231,12 @@ public  class UtenteBusiness {
 
         }
 
-        public PasswordResult resetPsw(String email){
-            boolean esistenzaUtente;
-            PasswordResult result= new PasswordResult();
+        public int resetPassword(String email, String psw){
 
-            esistenzaUtente= UtenteAcquirenteDao.getInstance().controlloCredenziali(email);
-            if(esistenzaUtente){
-                //generazione codice
-                String cod=getRandomString(5);
-                //invio email con codice
-                String tmp= JOptionPane.showInputDialog("Inserire il codice inviato per email");
-                if(cod.equalsIgnoreCase(tmp)){
-                    tmp= JOptionPane.showInputDialog("Inserire la nuova password");
-                }
-
-                return result ;
-            }
-            else{
-                result.setResult(PasswordResult.Result.EMAIL_NON_VALIDA);
-                result.setMessaggio("Email non valida");
-                JOptionPane.showMessageDialog(new JFrame(),result.getMessaggio());
-                return result;
-            }
-            //invio email con codice
+            return UtenteAcquirenteDao.getInstance().update(UtenteAcquirenteDao.getInstance().findByEmail(email), psw);
 
         }
+
 
         public FactoryProviderUtente.FactoryType tipoUtenteId(String id){
             Object u=UtenteAcquirenteDao.getInstance().findById(id);
@@ -297,44 +284,204 @@ public  class UtenteBusiness {
             return UtenteAcquirenteDao.getInstance().findAll();
        }
 
-
-
-    static String getRandomString(int i)
-    {
-
-        // bind the length
-        byte[] bytearray;
-        bytearray = new byte[256];
-        String mystring;
-        StringBuffer thebuffer;
-        String theAlphaNumericS;
-
-        new Random().nextBytes(bytearray);
-
-        mystring= new String(bytearray, Charset.forName("UTF-8"));
-
-        thebuffer = new StringBuffer();
-
-        //remove all spacial char
-        theAlphaNumericS = mystring.replaceAll("[^A-Z0-9]", "");
-
-        //random selection
-        for (int m = 0; m < theAlphaNumericS.length(); m++) {
-
-            if (Character.isLetter(theAlphaNumericS.charAt(m))
-                    && (i > 0)
-                    || Character.isDigit(theAlphaNumericS.charAt(m))
-                    && (i > 0)) {
-
-                thebuffer.append(theAlphaNumericS.charAt(m));
-                i--;
-            }
-        }
-
-        // the resulting string
-        return thebuffer.toString();
+    public List<Utente> getUtentiAcquirenti(PuntoVendita puntoVendita){
+        return UtenteAcquirenteDao.getInstance().findAll(puntoVendita);
     }
 
+       public UtenteAcquirente getUtenteAcquirente(String id){
+            return UtenteAcquirenteDao.getInstance().findById(id);
+
+       }
+
+       public List<Utente> getManager(){
+            return ManagerDao.getInstance().findAll();
+
+       }
+
+       public  Manager getManager(String id){
+            return ManagerDao.getInstance().findById(id);
+
+       }
+
+       public JComboBox getManagerBox(){
+           JComboBox comboBox= new JComboBox();
+           List<Utente> manager= ManagerDao.getInstance().findAll();
+           System.out.println("Dimensione manager "+manager.size());
+
+           for(Utente m: manager){
+               comboBox.addItem(m.getNome());
+
+           }
+           return comboBox;
+
+       }
+
+       public int addManger(List<Object> a){
+            Manager manager= new Manager();
+            manager.setNome((String) a.get(0));
+            manager.setCognome((String) a.get(1));
+            //a.get(2) rappresenta il punto vendita, l'id del manager devo metterlo nell punto vendita
+            manager.setDataDiNascita(new Data((String) a.get(3)));
+            manager.setStipendio(Float.parseFloat((String) a.get(4)));
+            manager.setInizioIncarico(new Data((String) a.get(5)));
+            manager.setFineIncarico(new Data((String) a.get(6)));
+            manager.setUsername((String) a.get(7));
+            manager.setEmail((String) a.get(8));
+            manager.setTelefono((String) a.get(9));
+            manager.setIndirizzo((String) a.get(11));
+            manager.setCitta((String) a.get(12));
+            int i=ManagerDao.getInstance().add(manager, (String) a.get(10));
+            if(i<0)
+                return i;
+            int id= UtilityBuisness.getInstance().getMax("manager", "idmanager");
+            if(id<0)
+                return id;
+
+            manager.setId(String.valueOf(id));
+
+            String idPV= PuntoVenditaBuisness.getInstance().getPuntivendita().get((Integer) a.get(2)).getId();//id del punto vendita scelto
+            return PuntoVenditaDao.getInstance().UpdateManager(PuntoVenditaDao.getInstance().findById(idPV),manager );
+
+       }
+
+       public int addUtenteAcuirente(List<Object> a){
+
+           UtenteAcquirente utente= new UtenteAcquirente();
+           utente.setNome((String) a.get(0));
+           utente.setCognome((String) a.get(1));
+           String idPV= PuntoVenditaBuisness.getInstance().getPuntivendita().get((Integer) a.get(2)).getId();//id del punto vendita scelto
+           System.out.println("Id punto vendita " + idPV);
+           utente.setPuntoVendita(PuntoVenditaDao.getInstance().findById(idPV));
+           System.out.println("Id punto vendita risultante "+utente.getPuntoVendita().getId());
+           utente.setDataDiNascita(new Data((String) a.get(3)));
+           utente.setUsername((String) a.get(7));
+           utente.setEmail((String) a.get(8));
+           utente.setTelefono((String) a.get(9));
+           utente.setIndirizzo((String) a.get(11));
+           utente.setCitta((String) a.get(12));
+
+           return UtenteAcquirenteDao.getInstance().add(utente, (String) a.get(10));
+       }
+
+       public int updateManager(List<Object> a){
+
+           Manager manager= new Manager();
+           manager.setNome((String) a.get(0));
+           manager.setCognome((String) a.get(1));
+           //a.get(2) rappresenta il punto vendita, l'id del manager devo metterlo nell punto vendita
+           manager.setDataDiNascita(new Data((String) a.get(3)));
+           manager.setStipendio(Float.parseFloat((String) a.get(4)));
+           manager.setInizioIncarico(new Data((String) a.get(5)));
+           manager.setFineIncarico(new Data((String) a.get(6)));
+           manager.setUsername((String) a.get(7));
+           manager.setEmail((String) a.get(8));
+           manager.setTelefono((String) a.get(9));
+           manager.setIndirizzo((String) a.get(11));
+           manager.setCitta((String) a.get(12));
+           manager.setId((String) a.get(13));
+
+           return ManagerDao.getInstance().update(manager);
+       }
+
+       public int removeManager(String id){
+
+           return ManagerDao.getInstance().remove(id);
+       }
+       public int updataUtenteAcquirente(List<Object> a){
+            UtenteAcquirente utente= new UtenteAcquirente();
+
+
+           utente.setNome((String) a.get(0));
+           utente.setCognome((String) a.get(1));
+           String idPV= PuntoVenditaBuisness.getInstance().getPuntivendita().get((Integer) a.get(2)).getId();//id del punto vendita scelto
+           System.out.println("Id punto vendita " + idPV);
+           utente.setPuntoVendita(PuntoVenditaDao.getInstance().findById(idPV));
+           System.out.println("Id punto vendita risultante "+utente.getPuntoVendita().getId());
+           utente.setDataDiNascita(new Data((String) a.get(3)));
+           utente.setUsername((String) a.get(7));
+           utente.setEmail((String) a.get(8));
+           utente.setTelefono((String) a.get(9));
+           utente.setIndirizzo((String) a.get(11));
+           utente.setCitta((String) a.get(12));
+           utente.setId((String) a.get(13));
+           System.out.println("Id utente " + utente.getId());
+
+           return UtenteAcquirenteDao.getInstance().update(utente, (String) a.get(10));
+       }
+
+       public int updateStato(Object utente, String stato){
+
+           System.out.println(stato);
+           UtenteAcquirente u= (UtenteAcquirente) utente;
+           if (stato.equalsIgnoreCase("eliminato")){
+
+               return UtenteAcquirenteDao.getInstance().removeByUsername(u.getUsername());
+
+           }else{
+               if(stato.equalsIgnoreCase("attivo")){
+                   u.setStato(UtenteAcquirente.Stato.ATTIVO);
+               }else{
+                   u.setStato(UtenteAcquirente.Stato.BLOCCATO);
+               }
+               return UtenteAcquirenteDao.getInstance().updateStato(u);
+           }
+
+       }
+
+
+       public ArrayList<String> getEmailClienti(){
+
+           PuntoVendita puntoVendita= PuntoVenditaBuisness.getInstance().findBySessioneManager();
+           List<Utente> u = UtenteBusiness.getInstance().getUtentiAcquirenti(puntoVendita);
+           ArrayList<String> email= new ArrayList<>();
+           for(Utente utente:u)
+               email.add(utente.getEmail());
+
+           return email;
+       }
+
+
+
+
+    public String getNomeUtente(Object utente){
+            if (utente instanceof Utente){
+                return ((Utente) utente).getNome();
+            }
+            return null;
+
+    }
+
+    public String getCognomeUtente(Object utente){
+        if (utente instanceof Utente){
+            return ((Utente) utente).getCognome();
+        }
+        return null;
+
+    }
+
+    public String getUsernameUtente(Object utente){
+        if (utente instanceof Utente){
+            return ((Utente) utente).getUsername();
+        }
+        return null;
+
+    }
+
+    public String getIdUtente(Object utente){
+        if (utente instanceof Utente){
+            return ((Utente) utente).getId();
+        }
+        return null;
+
+    }
+
+    public String getStato(Object utente){
+            if (utente instanceof UtenteAcquirente){
+                return ((UtenteAcquirente) utente).getStatoString();
+            }
+            return null;
+
+    }
 
 }
 

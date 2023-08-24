@@ -195,4 +195,9 @@ public class AmministratoreDao implements IUtentiDao{
         rowCount = executor.updateOperation(writeOp);
         return rowCount;
     }
+
+    @Override
+    public Utente findByEmail(String email) {
+        return null;
+    }
 }

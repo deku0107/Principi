@@ -9,7 +9,7 @@ public class ServizioFactory implements AbstractFactory {
     public Articolo crea(String id) {
         ServizioDao articoloDao=ServizioDao.getInstance();
 
-        return articoloDao.findArticolo(id).get(0);
+        return articoloDao.findArticolo(id);
     }
 
 

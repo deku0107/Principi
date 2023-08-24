@@ -17,6 +17,22 @@ public class ProduttoreBuisness {
 
     }
 
+    public Produttore getbyId(String id){
+        return ProduttoreDAO.getInstance().find(id);
+
+    }
+
+    public int update(String nome, String sito, String citta, String nazione, String id){
+        Produttore produttore=new Produttore();
+        produttore.setCitta(citta);
+        produttore.setSitoWeb(sito);
+        produttore.setNome(nome);
+        produttore.setNazione(nazione);
+        produttore.setId(id);
+
+        return ProduttoreDAO.getInstance().update(produttore);
+    }
+
     public JComboBox getproduttoreBox(){
         JComboBox comboBox= new JComboBox();
         List<Produttore> produttori= ProduttoreBuisness.getInstance().getProduttori();
@@ -43,4 +59,40 @@ public class ProduttoreBuisness {
         return ProduttoreDAO.getInstance().remove(produttore);
 
     }
+
+    public String getNome(Object o){
+        if (o instanceof Produttore)
+            return ((Produttore) o).getNome();
+        return null;
+
+    }
+
+    public String getSito(Object o){
+        if (o instanceof Produttore)
+            return ((Produttore) o).getSitoWeb();
+        return null;
+
+    }
+
+    public String getCitta(Object o){
+        if (o instanceof Produttore)
+            return ((Produttore) o).getCitta();
+        return null;
+
+    }
+
+    public String getNazione(Object o){
+        if (o instanceof Produttore)
+            return ((Produttore) o).getNazione();
+        return null;
+
+    }
+
+    public String getId(Object o){
+        if (o instanceof Produttore)
+            return ((Produttore) o).getId();
+        return null;
+
+    }
+
 }

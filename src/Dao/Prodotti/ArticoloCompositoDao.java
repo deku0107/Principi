@@ -1,7 +1,5 @@
 package Dao.Prodotti;
 
-
-
 import DBInterface.command.DbOperationeExecutor;
 import DBInterface.command.IDbOperation;
 import DBInterface.command.ReadOperation;
@@ -12,7 +10,6 @@ import Model.Prodotti.ArticoloComposito;
 import Model.Prodotti.Composizione;
 import Model.Prodotti.Prodotto;
 import Model.Produttore;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -98,14 +95,14 @@ public class ArticoloCompositoDao implements IArticoloDao{
     }
 
     @Override
-    public ArrayList<Articolo> findArticolo(String id) {
+    public  Articolo findArticolo(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
-            ArrayList<Articolo> articoli= new ArrayList<>();
-            while (rs.next()){
+            rs.next();
+            if (rs.getRow()==1){
                 ArticoloComposito prodotto = new ArticoloComposito();
                 prodotto.setId(rs.getString("idarticolo"));
                 prodotto.setNome(rs.getString("nome"));
@@ -119,10 +116,10 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setComposizione(findComposizione(prodotto));
 
-                articoli.add(prodotto);
+               return prodotto;
 
             }
-            return articoli;
+            return null;
 
         }catch (SQLException e ){
             System.out.println("SQL exception:  " + e.getMessage());
@@ -133,6 +130,8 @@ public class ArticoloCompositoDao implements IArticoloDao{
         }
         return null;
     }
+
+
     public ArrayList<Articolo> findArticolo() {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito';");
@@ -152,11 +151,17 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
-                prodotto.setComposizione(findComposizione(prodotto));
+                //prodotto.setComposizione(findComposizione(prodotto));
 
                 articoli.add(prodotto);
 
             }
+
+            for(Articolo a:articoli){
+                ArticoloComposito articoloComposito= (ArticoloComposito)a;
+                articoloComposito.setComposizione(findComposizione(articoloComposito));
+            }
+
             return articoli;
 
         }catch (SQLException e ){
@@ -254,26 +259,26 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
                 Composizione c = new Composizione();
                 System.out.println("Prova");
-                if(ProdottoDao.getInstance().findArticolo(id).size()==0){
-                    if(ArticoloCompositoDao.getInstance().findArticolo(id).size()==0){
-                        if(ServizioDao.getInstance().findArticolo(id).size()==0){
+                if(ProdottoDao.getInstance().findArticolo(id)==null){
+                    if(ArticoloCompositoDao.getInstance().findArticolo(id)==null){
+                        if(ServizioDao.getInstance().findArticolo(id)==null){
                             c.setArticolo(null);
                             c.setQuantita(0);
                         }else{
                             //servizio
-                            c.setArticolo(ServizioDao.getInstance().findArticolo(id).get(0));
+                            c.setArticolo(ServizioDao.getInstance().findArticolo(id));
                             c.setQuantita(quantita);
                             composizione.add(c);
                         }
                     }else{
                         //articolo composito
-                        c.setArticolo(ArticoloCompositoDao.getInstance().findArticolo(id).get(0));
+                        c.setArticolo(ArticoloCompositoDao.getInstance().findArticolo(id));
                         c.setQuantita(quantita);
                         composizione.add(c);
                     }
 
                 }else {
-                    c.setArticolo(ProdottoDao.getInstance().findArticolo(id).get(0));
+                    c.setArticolo(ProdottoDao.getInstance().findArticolo(id));
                     c.setQuantita(quantita);
                     composizione.add(c);
                 }
@@ -345,6 +350,19 @@ public class ArticoloCompositoDao implements IArticoloDao{
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);
         rowCount = executor.updateOperation(writeOp);
+        return rowCount;
+    }
+
+    public int setPosizione(String idArticolo,  int corsia, int scaffale) {
+
+        String sql = "UPDATE `mydb`.`articolo` SET `corsia` = '"+corsia+"', `scaffale` = '"+scaffale+"' WHERE (`idarticolo` = '"+idArticolo+"') ;";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
         return rowCount;
     }
 

@@ -122,8 +122,8 @@ public class IArticoloDaoTest {
         //test ricerca per id dell' articolo 1
 
         ProdottoDao articoloDao = new ProdottoDao();
-        ArrayList<Articolo> articolo=  articoloDao.findArticolo("1");
-        Prodotto prodotto = (Prodotto) articolo.get(0);
+
+        Prodotto prodotto = (Prodotto)  articoloDao.findArticolo("1");
         Assert.assertTrue("1".equalsIgnoreCase(prodotto.getId().trim()));
         Assert.assertTrue("test".equalsIgnoreCase( prodotto.getNome().trim()));
         Assert.assertEquals(10.99f, prodotto.getPrezzo(), 0.0);
@@ -144,10 +144,8 @@ public class IArticoloDaoTest {
                 max=rs.getInt("i")-2;
 
                 //test ricerca per id dell' articolo
-                articolo.clear();
-                articolo= ProdottoDao.getInstance().findArticolo(String.valueOf(max));
-                Assert.assertEquals(1, articolo.size());
-                prodotto = (Prodotto) articolo.get(0);
+
+                prodotto = (Prodotto) ProdottoDao.getInstance().findArticolo(String.valueOf(max));
                 Assert.assertTrue(String.valueOf(max).equalsIgnoreCase(prodotto.getId().trim()));
                 Assert.assertTrue("Nome prodotto test".equalsIgnoreCase( prodotto.getNome().trim()));
                 Assert.assertEquals(150.50f, prodotto.getPrezzo(), 0.0);
@@ -157,10 +155,7 @@ public class IArticoloDaoTest {
 
 
                 //test ricerca per id dell' articolo composito
-                articolo.clear();
-                articolo=ArticoloCompositoDao.getInstance().findArticolo(String.valueOf(max+1));
-                Assert.assertEquals(1, articolo.size());
-                ArticoloComposito articoloComposito=(ArticoloComposito) articolo.get(0);
+                ArticoloComposito articoloComposito=(ArticoloComposito) ArticoloCompositoDao.getInstance().findArticolo(String.valueOf(max+1));
                 Assert.assertTrue("Nome articolo composito prova".equalsIgnoreCase(articoloComposito.getNome()));
                 Assert.assertEquals(200.50f,articoloComposito.getPrezzo(), 0.0);
                 Assert.assertTrue("Descrizione articolo composito".equalsIgnoreCase(articoloComposito.getDescrizione()));
@@ -174,10 +169,7 @@ public class IArticoloDaoTest {
 
 
               //test ricerca per id del servizio
-                articolo.clear();
-                articolo=ServizioDao.getInstance().findArticolo(String.valueOf(max+2));
-                Assert.assertEquals(1, articolo.size());
-                Servizio servizio= (Servizio) articolo.get(0);
+                Servizio servizio= (Servizio) ServizioDao.getInstance().findArticolo(String.valueOf(max+2));
                 Assert.assertTrue("Nome servizio test".equalsIgnoreCase(servizio.getNome()));
                 Assert.assertEquals(20.00f,servizio.getPrezzo(), 0.0);
                 Assert.assertTrue("Descrizione servizio test".equalsIgnoreCase(servizio.getDescrizione()));
@@ -271,9 +263,7 @@ public class IArticoloDaoTest {
 
 
                 //test aggiornamento articolo
-                ArrayList<Articolo> articoli= ProdottoDao.getInstance().findArticolo(String.valueOf(max));
-                Assert.assertEquals(1, articoli.size());
-                prodotto = (Prodotto) articoli.get(0);
+                prodotto = (Prodotto)ProdottoDao.getInstance().findArticolo(String.valueOf(max));
                 Assert.assertTrue(String.valueOf(max).equalsIgnoreCase(prodotto.getId().trim()));
                 Assert.assertEquals("Nome prodotto test modificato", (prodotto.getNome()));
                 Assert.assertEquals(1500.50f, prodotto.getPrezzo(), 0.0);
@@ -283,10 +273,8 @@ public class IArticoloDaoTest {
 
 
                 //test aggiornamento articolo composito
-                articoli.clear();
-                articoli=ArticoloCompositoDao.getInstance().findArticolo(String.valueOf(max+1));
-                Assert.assertEquals(1, articoli.size());
-                ArticoloComposito articoloComposito1=(ArticoloComposito) articoli.get(0);
+
+                ArticoloComposito articoloComposito1=(ArticoloComposito) ArticoloCompositoDao.getInstance().findArticolo(String.valueOf(max+1));
                 Assert.assertTrue("Nome articolo composito prova modifica".equalsIgnoreCase(articoloComposito1.getNome()));
                 Assert.assertEquals(20.50f,articoloComposito1.getPrezzo(), 0.0);
                 Assert.assertTrue("Descrizione articolo composito modificato".equalsIgnoreCase(articoloComposito1.getDescrizione()));
@@ -299,10 +287,7 @@ public class IArticoloDaoTest {
 
 
                 //test aggiornamento servizio
-                articoli.clear();
-                articoli=ServizioDao.getInstance().findArticolo(String.valueOf(max+2));
-                Assert.assertEquals(1, articoli.size());
-                Servizio servizio1= (Servizio) articoli.get(0);
+                Servizio servizio1= (Servizio) ServizioDao.getInstance().findArticolo(String.valueOf(max+2));
                 Assert.assertTrue("Nome servizio test modifica".equalsIgnoreCase(servizio1.getNome()));
                 Assert.assertEquals(2000.00f,servizio1.getPrezzo(), 0.0);
                 Assert.assertTrue("Descrizione servizio test modificata".equalsIgnoreCase(servizio1.getDescrizione()));
