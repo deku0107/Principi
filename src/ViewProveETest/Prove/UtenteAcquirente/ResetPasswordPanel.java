@@ -126,6 +126,7 @@ public class ResetPasswordPanel extends JPanel {
         codice.setEditable(true);
         codice.setVisible(true);
         conferma.setVisible(true);
+        conferma.setText("Conferma");
         conferma.addActionListener(loginListener);
 
         email.setEditable(false);

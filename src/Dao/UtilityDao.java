@@ -3,9 +3,7 @@ package Dao;
 import DBInterface.command.DbOperationeExecutor;
 import DBInterface.command.IDbOperation;
 import DBInterface.command.ReadOperation;
-import Dao.Utenti.ManagerDao;
-import Model.Utenti.Manager;
-import org.junit.Assert;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
