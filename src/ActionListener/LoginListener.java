@@ -1,6 +1,6 @@
 package ActionListener;
 
-import Buisness.Bridge.MailHelper;
+import Buisness.Bridge.Mail.MailHelper;
 import Buisness.SessionManager;
 import Buisness.Utente.LoginResult;
 import Buisness.Utente.UtenteBusiness;
@@ -11,7 +11,6 @@ import ViewProveETest.Prove.UtenteAcquirente.ResetPasswordPanel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class LoginListener implements ActionListener {
 

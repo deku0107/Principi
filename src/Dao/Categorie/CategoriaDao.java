@@ -83,16 +83,16 @@ public class CategoriaDao implements ICategoriaDao{
     }
 
     @Override
-    public ArrayList<Categoria> findCategoriaByName(String id) {
+    public ArrayList<Categoria> findCategoriaByName(String nome) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.categoria where idcategoria= = '"+id+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.categoria where nome= '"+nome+"';");
         rs = executor.executeOperation(readOp);
 
         try {
             ArrayList<Categoria> categorie= new ArrayList<>();
             while (rs.next()){
                 Categoria categoria= new Categoria();
-                categoria.setNome(id);
+                categoria.setNome(nome);
                 categoria.setId(rs.getString("idcategoria"));
                 categoria.setDescrizione(rs.getString("descrizione"));
                 String tmp= rs.getString("categoria");
@@ -132,6 +132,36 @@ public class CategoriaDao implements ICategoriaDao{
                 categoria1.setId(tmp);
                 categoria.setCategoriaPadre(categoria1);
 
+                categorie.add(categoria);
+            }
+            return categorie;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public ArrayList<Categoria> findChild(Categoria i) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.categoria where categoria= '"+i.getId()+"';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Categoria> categorie= new ArrayList<>();
+            while (rs.next()){
+                Categoria categoria= new Categoria();
+                categoria.setId(rs.getString("idcategoria"));
+                categoria.setNome(rs.getString("nome"));
+                categoria.setDescrizione(rs.getString("descrizione"));
+                categoria.setCategoriaPadre(i);
                 categorie.add(categoria);
             }
             return categorie;

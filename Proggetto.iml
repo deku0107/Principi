@@ -21,7 +21,6 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="library" name="pdfbox-app-3.0.0-alpha3" level="project" />
-    <orderEntry type="library" name="commons-logging-1.2" level="project" />
     <orderEntry type="library" name="javax.mail" level="project" />
     <orderEntry type="module-library">
       <library>
@@ -32,13 +31,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="google-api-client-1.33.0" level="project" />
     <orderEntry type="library" name="jar_files" level="project" />
-    <orderEntry type="library" name="jsr305-3.0.2" level="project" />
-    <orderEntry type="library" name="google-api-client-gson-2.2.0" level="project" />
-    <orderEntry type="library" name="commons-logging-1.21" level="project" />
-    <orderEntry type="library" name="checker-qual-3.12.0" level="project" />
-    <orderEntry type="library" name="auto-value-annotations-1.10.1" level="project" />
-    <orderEntry type="library" name="checker-qual-3.5.0" level="project" />
   </component>
 </module>

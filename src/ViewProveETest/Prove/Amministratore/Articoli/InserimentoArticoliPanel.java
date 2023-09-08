@@ -2,6 +2,7 @@ package ViewProveETest.Prove.Amministratore.Articoli;
 
 
 import Buisness.ArticoloBuisness;
+import ViewProveETest.Prove.Amministratore.Articoli.ArticoloComposito.InserimentoProdottoCompositoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +12,18 @@ import java.awt.event.ActionListener;
 
 public class InserimentoArticoliPanel extends JPanel {
 
+    private JLabel nomeLabel;
     private JTextField nome;
+    private JLabel tipoLabel;
     private JComboBox tipo;
+    private JLabel prezzoLabel;
     private JTextField prezzo;
     private JButton conferma;
 
     public InserimentoArticoliPanel(){
 
+            nomeLabel= new JLabel("Nome");
+            tipoLabel= new JLabel("Tipo");prezzoLabel= new JLabel("Prezzo");
             nome = new JTextField();
             nome.setColumns(20);
 
@@ -46,6 +52,7 @@ public class InserimentoArticoliPanel extends JPanel {
                         if (tipo.getSelectedIndex() == 0) {
                             // mostra schermata gestione prodotto
                             removeAll();
+
                             add(new GestioneProdottoPanel(nome, prezzo));
                             repaint();
                             validate();
@@ -68,13 +75,36 @@ public class InserimentoArticoliPanel extends JPanel {
                 }
             });
 
-            setLayout(new FlowLayout());
+            setLayout(new GridBagLayout());
 
-            this.add(nome);
-            this.add(tipo);
-            this.add(prezzo);
-            this.add(conferma);
+            GridBagConstraints gbc= new GridBagConstraints();
+
+            gbc.insets= new Insets(20,20,20,20);
+            gbc.gridx=0;
+            gbc.gridy=0;
+
+            this.add(nomeLabel, gbc);
+            gbc.gridy=1;
+            this.add(nome, gbc);
+
+            gbc.gridx=1;
+            gbc.gridy=0;
+
+            this.add(tipoLabel, gbc);
+            gbc.gridy=1;
+            this.add(tipo, gbc);
+
+            gbc.gridx=2;
+            gbc.gridy=0;
+
+            this.add(prezzoLabel, gbc);
+            gbc.gridy=1;
+            this.add(prezzo, gbc);
+
+            gbc.gridx=3;
+            this.add(conferma, gbc);
         }
+
 
 
     public JTextField getNome() {

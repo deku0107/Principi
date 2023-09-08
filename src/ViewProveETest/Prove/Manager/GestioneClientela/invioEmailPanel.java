@@ -1,6 +1,8 @@
 package ViewProveETest.Prove.Manager.GestioneClientela;
 
-import Buisness.Bridge.MailHelper;
+import Buisness.Bridge.Mail.InvioEmail;
+import Buisness.Bridge.Mail.MailAPI;
+import Buisness.Bridge.Mail.MailHelper;
 import Buisness.Utente.UtenteBusiness;
 
 import javax.swing.*;
@@ -36,7 +38,8 @@ public class invioEmailPanel extends JPanel {
                 ArrayList<String> email= UtenteBusiness.getInstance().getEmailClienti();
                 for(String s: email) {
                     System.out.println(s);
-                    MailHelper.getInstance().send(s, subjectTextField.getText(), bodyTextField.getText());
+                    InvioEmail invioEmail= new InvioEmail(new MailAPI());
+                    invioEmail.invia(s, subjectTextField.getText(), bodyTextField.getText(), null);
                 }
             }
         });

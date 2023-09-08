@@ -27,7 +27,7 @@ public class AmministratoreMenuDecorator extends CustomMenuDecorator{
         //action command, listener...
         pulsanti.add(manager);
 
-        JButton catalogo = new JButton("Gestione Catalogo");
+        JButton catalogo = new JButton("Inserimento prodotti");
         catalogo.setActionCommand("gestione_catalogo");
         catalogo.addActionListener(new AmministratoreListener(null));
         pulsanti.add(catalogo);

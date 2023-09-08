@@ -4,6 +4,7 @@ import DBInterface.command.DbOperationeExecutor;
 import DBInterface.command.IDbOperation;
 import DBInterface.command.ReadOperation;
 import DBInterface.command.WriteOperation;
+import Dao.UtilityDao;
 import Model.Categoria;
 import Model.Prodotti.Articolo;
 import Model.Prodotti.ArticoloComposito;
@@ -56,7 +57,15 @@ public class ArticoloCompositoDao implements IArticoloDao{
         }catch (NullPointerException e) {
             System.out.println("Result set " + e.getMessage());
         }
-        return -5;
+
+        int id = UtilityDao.getInstance().getMax("articolo", "idarticolo");
+
+        sql= "INSERT INTO `mydb`.`immagine` (`articolo`, `path`) VALUES ('"+id+"', '"+((ArticoloComposito) articolo).getImmagine().getPath()+"');";
+        writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -2;
+        return rowCount;
     }
 
     public int addComposizione(Composizione composizione, ArticoloComposito articoloComposito) {
@@ -131,10 +140,89 @@ public class ArticoloCompositoDao implements IArticoloDao{
         return null;
     }
 
+    public  Articolo findArticolo(String id, String c) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+id+"' and categoria='"+c+"';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            rs.next();
+            if (rs.getRow()==1){
+                ArticoloComposito prodotto = new ArticoloComposito();
+                prodotto.setId(rs.getString("idarticolo"));
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                Produttore produttore= new Produttore();
+                produttore.setId(rs.getString("produttore"));
+                prodotto.setProduttore(produttore);
+                Categoria categoria= new Categoria();
+                categoria.setId(rs.getString("categoria"));
+                prodotto.setCategoria(categoria);
+                prodotto.setDescrizione(rs.getString("descrizione"));
+                prodotto.setComposizione(findComposizione(prodotto));
+
+                return prodotto;
+
+            }
+            return null;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+
 
     public ArrayList<Articolo> findArticolo() {
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Articolo> articoli= new ArrayList<>();
+            while (rs.next()){
+                ArticoloComposito prodotto = new ArticoloComposito();
+                prodotto.setId(rs.getString("idarticolo"));
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                Produttore produttore= new Produttore();
+                produttore.setId(rs.getString("produttore"));
+                prodotto.setProduttore(produttore);
+                Categoria categoria= new Categoria();
+                categoria.setId(rs.getString("categoria"));
+                prodotto.setCategoria(categoria);
+                prodotto.setDescrizione(rs.getString("descrizione"));
+                //prodotto.setComposizione(findComposizione(prodotto));
+
+                articoli.add(prodotto);
+
+            }
+
+            for(Articolo a:articoli){
+                ArticoloComposito articoloComposito= (ArticoloComposito)a;
+                articoloComposito.setComposizione(findComposizione(articoloComposito));
+            }
+
+            return articoli;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+    public ArrayList<Articolo> findArticolo(Categoria c) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and categoria= '"+c.getId()+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -245,7 +333,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
     public ArrayList<Composizione> findComposizione(ArticoloComposito articoloComposito){
 
-        String sql = " SELECT articolo_composito_interno, quantita_articolo_interno FROM mydb.articolo_composito where idarticolo_composito = '"+articoloComposito.getId()+"';";
+        String sql = " SELECT * FROM mydb.articolo_composito where idarticolo_composito = '"+articoloComposito.getId()+"';";
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation(sql);
         rs = executor.executeOperation(readOp);
@@ -253,12 +341,13 @@ public class ArticoloCompositoDao implements IArticoloDao{
         try {
             ArrayList<Composizione> composizione= new ArrayList<>();
             while (rs.next()){
+                String idComposizione= rs.getString("id");
                 String id = rs.getString("articolo_composito_interno");
                 int quantita = rs.getInt("quantita_articolo_interno");
 
 
                 Composizione c = new Composizione();
-                System.out.println("Prova");
+                c.setId(idComposizione);
                 if(ProdottoDao.getInstance().findArticolo(id)==null){
                     if(ArticoloCompositoDao.getInstance().findArticolo(id)==null){
                         if(ServizioDao.getInstance().findArticolo(id)==null){
@@ -335,6 +424,38 @@ public class ArticoloCompositoDao implements IArticoloDao{
         return rowCount;
     }
 
+    public int updateQuantitaComposizione(Composizione composizione, int i) {
+
+        String sql;
+        String id = composizione.getId();
+
+            sql="UPDATE `mydb`.`articolo_composito` SET `quantita_articolo_interno` = '"+i+"' WHERE (`id` = '"+id+"');";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
+        return rowCount;
+    }
+
+    public int deleteComposizione(Composizione composizione) {
+
+        String sql;
+        String id = composizione.getId();
+
+            sql = "DELETE FROM `mydb`.`articolo_composito` WHERE (`id` = '"+id+"' );";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
+        return rowCount;
+    }
+
     public int updateComposizione(ArticoloComposito articoloComposito) {
 
         int c=0;
@@ -343,6 +464,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
         }
         return c;
     }  // array di composizioni
+
 
     @Override
     public int remove(String id) {

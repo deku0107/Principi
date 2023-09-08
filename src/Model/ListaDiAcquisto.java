@@ -9,6 +9,15 @@ public class ListaDiAcquisto {
 
     private ArrayList<Articolo> lista;
     private UtenteAcquirente utenteAcquirente;
+    private String nome;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
     public ArrayList<Articolo> getLista() {
         return lista;

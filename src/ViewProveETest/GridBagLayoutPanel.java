@@ -1,5 +1,6 @@
 package ViewProveETest;
 
+import ActionListener.AmministratoreListener.AmministratoreListener;
 import ActionListener.CatalogoListener;
 import Buisness.ArticoloBuisness;
 import Buisness.SessionManager;
@@ -28,7 +29,6 @@ public class GridBagLayoutPanel extends JPanel {
         ArticoloBuisness a = ArticoloBuisness.getInstance();
 
         btn2.setText(a.getNome(articolo));
-        btn3.setText(a.getCategoria(articolo).getNome());
         btn4.setText("Euro: " + a.getPrezzo(articolo));
         btn5.setText(a.getDescrizione(articolo));
         btn8.setText(String.valueOf(a.getQuantita(articolo)));
@@ -74,12 +74,7 @@ public class GridBagLayoutPanel extends JPanel {
         gbc.gridheight=1;
         add(btn8, gbc);
 
-        btn3= new JLabel("categoria");
-        gbc.gridx=5;
-        gbc.gridy=1;
-        gbc.gridwidth=1;
-        gbc.gridheight=1;
-        add(btn3, gbc);
+
 
         btn4= new JLabel("Prezzo");
         gbc.gridx=4;
@@ -145,6 +140,25 @@ public class GridBagLayoutPanel extends JPanel {
             gbc.gridwidth=1;
             gbc.gridheight=1;
             add(comboBox, gbc);
+
+        }
+
+        if(SessionManager.getSession().get(SessionManager.LOGGED_ADMIN)!=null){
+            btn6.setText("modifica");
+            ActionListener amministratoreListener= new AmministratoreListener(this);
+            btn6.removeActionListener(actionListener);
+            btn6.addActionListener(amministratoreListener);
+            btn6.setActionCommand("modifica_prodotto_admin");
+
+            btn7.setText("Elimina");
+
+            btn7.removeActionListener(actionListener);
+            btn7.addActionListener(amministratoreListener);
+            btn7.setActionCommand("elimina_prodotto_admin");
+
+
+
+
 
         }
 

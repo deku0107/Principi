@@ -17,6 +17,16 @@ public class CategoriaBuisness {
 
     }
 
+    public List<Categoria> getCategoriaChild(Categoria c){
+        return CategoriaDao.getInstance().findChild(c);
+
+    }
+    public List<Categoria> getCategoriaChild(int i){
+
+        return CategoriaDao.getInstance().findChild(CategoriaDao.getInstance().findCategoria(String.valueOf(i)));
+
+    }
+
     public JComboBox getCategorieBox(){
         JComboBox comboBox= new JComboBox();
         List<Categoria> categorie= CategoriaBuisness.getInstance().getCategorie();
@@ -68,6 +78,13 @@ public class CategoriaBuisness {
             return ((Categoria) o).getId();
         }
         return null;
+    }
+
+    public int getCategoriaIntId(Object o){
+        if (o instanceof Categoria){
+            return Integer.parseInt(((Categoria) o).getId());
+        }
+        return 0;
     }
 
     public int add(Object categoria){

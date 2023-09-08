@@ -1,30 +1,21 @@
-package Buisness.Bridge;
+package Buisness.Bridge.Mail;
 
-
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
-public class MailHelper {
 
-    private static MailHelper instance;
+public class MailAPI implements IMailAPI{
 
     private static final String FROM = "myshop2023pis@gmail.com";
     private static String PASSWORD;
 
-    public static synchronized MailHelper getInstance() {
-        if(instance == null)
-            instance = new MailHelper();
-        return instance;
-    }
-
-    /*public static void main(String[] args) {
-
-
-        getInstance().send("fragrassi825@gmail.com", "oggetto", "msg di test");
-    }*/
-
-    public void send(String to,String sub,String msg){
-
+    @Override
+    public void invioEmail(String to, String sub, String msg, String path) {
         String osName = System.getProperty("os.name");
         if(osName.equalsIgnoreCase("Windows 11")||osName.equalsIgnoreCase("Windows 10")||osName.equalsIgnoreCase("Windows")){
             PASSWORD="jpmnsahvpofiadaj";
@@ -54,9 +45,31 @@ public class MailHelper {
         //compose message
         try {
             MimeMessage message = new MimeMessage(session);
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(sub);
-            message.setText(msg);
+            if (path!=null) {
+
+                // Creare il corpo del messaggio
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setText(msg);
+
+                // Creare un oggetto Multipart per il messaggio
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(messageBodyPart);
+
+                MimeBodyPart attachmentPart = new MimeBodyPart();
+                FileDataSource fileDataSource = new FileDataSource(path);
+                attachmentPart.setDataHandler(new DataHandler(fileDataSource));
+                attachmentPart.setFileName(path);
+                multipart.addBodyPart(attachmentPart);
+
+                // Impostare il contenuto del messaggio come Multipart
+                message.setContent(multipart);
+            }else {
+                message.setText(msg);
+            }
+
+
             //send message
             Transport.send(message);
             System.out.println("message sent successfully");
@@ -66,5 +79,5 @@ public class MailHelper {
         }
 
     }
+    }
 
-}

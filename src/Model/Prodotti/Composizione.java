@@ -4,6 +4,7 @@ public class Composizione {
 
     private Articolo articolo;
     private int quantita;
+    private String id;
 
     public Articolo getArticolo() {
         return articolo;
@@ -19,5 +20,14 @@ public class Composizione {
 
     public void setQuantita(int quantita) {
         this.quantita = quantita;
+    }
+
+    public void setId(String idComposizione) {
+        id= idComposizione;
+    }
+
+    public String getId(){
+        return id;
+
     }
 }

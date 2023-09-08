@@ -1,4 +1,4 @@
-package Buisness.Bridge;
+package Buisness.Bridge.PDF;
 
 public abstract class Documento {
     protected PdfAPI pdfAPI;
@@ -7,5 +7,5 @@ public abstract class Documento {
         this.pdfAPI = pdfAPI;
     }
 
-    public abstract void invia(String indirizzo);
+    public abstract void esegui(String indirizzo);
 }

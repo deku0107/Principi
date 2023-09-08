@@ -1,18 +1,22 @@
 package Buisness;
 
+import Dao.Categorie.CategoriaDao;
 import Dao.Prodotti.ArticoloCompositoDao;
 import Dao.Prodotti.ProdottoDao;
 import Dao.Prodotti.ServizioDao;
 import Dao.PuntoVendita.OffertaDAO;
 import Dao.PuntoVendita.PuntoVenditaDao;
 import Model.Categoria;
+import Model.Immagine;
 import Model.Prodotti.*;
 import Model.Produttore;
 import Model.PuntoVendita;
 import Model.Utenti.Manager;
 import Model.Utenti.UtenteAcquirente;
 
+
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,18 @@ public class ArticoloBuisness {
         return articoloList;
     }
 
+    public List<Articolo> getProdotti(String categoria){
+
+        Categoria c= CategoriaDao.getInstance().findCategoriaByName(categoria).get(0);
+        if (c==null){
+            return null;
+        }
+        List<Articolo> articoloList= ProdottoDao.getInstance().findArticolo(c);
+        List<Articolo> articoloList1=ArticoloCompositoDao.getInstance().findArticolo(c);
+        articoloList.addAll(articoloList1);
+        return articoloList;
+    }
+
     public List<Articolo> getCatalogo(){
 
         UtenteAcquirente utenteAcquirente= (UtenteAcquirente) SessionManager.getSession().get(SessionManager.LOGGED_USER);
@@ -40,6 +56,18 @@ public class ArticoloBuisness {
         return OffertaDAO.getInstance().getOfferta(idPuntoVendita);
 
     }
+
+    public List<Articolo> getCatalogoByCategoria(String categoria){
+
+        UtenteAcquirente utenteAcquirente= (UtenteAcquirente) SessionManager.getSession().get(SessionManager.LOGGED_USER);
+
+        String idPuntoVendita= utenteAcquirente.getPuntoVendita().getId();
+        System.out.println("Id punto vendita " + idPuntoVendita);
+
+        return OffertaDAO.getInstance().getOfferta(idPuntoVendita, categoria);
+
+    }
+
     public List<Articolo> getCatalogo(String id){
 
 
@@ -104,7 +132,7 @@ public class ArticoloBuisness {
         return ServizioDao.getInstance().addArticolo(servizio);
     }
 
-    public int addProdotto(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione){
+    public int addProdotto(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione, String path){
         Prodotto prodotto= new Prodotto();
         prodotto.setNome(nome);
         prodotto.setPrezzo(prezzo);
@@ -113,10 +141,27 @@ public class ArticoloBuisness {
         prodotto.setCorsia(corsia);
         prodotto.setProduttore(produttore);
         prodotto.setDescrizione(descrizione);
+        //settare l'immagine con il path
+        prodotto.setImmagine(path);
         return ProdottoDao.getInstance().addArticolo(prodotto);
     }
 
-    public int addProdottoComposito(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione, List<Object> composizione, List<Integer> quantita ){
+    public int updateProdotto(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione, String path, String id){
+        Prodotto prodotto= new Prodotto();
+        prodotto.setNome(nome);
+        prodotto.setPrezzo(prezzo);
+        prodotto.setCategoria(categoria);
+        prodotto.setScaffale(scaffale);
+        prodotto.setCorsia(corsia);
+        prodotto.setProduttore(produttore);
+        prodotto.setDescrizione(descrizione);
+        prodotto.setId(id);
+        //settare l'immagine con il path
+        prodotto.setImmagine(path);
+        return ProdottoDao.getInstance().update(prodotto);
+    }
+
+    public int addProdottoComposito(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione, List<Object> composizione, List<Integer> quantita, String path){
 
         ArticoloComposito articoloComposito= new ArticoloComposito();
         articoloComposito.setNome(nome);
@@ -126,6 +171,7 @@ public class ArticoloBuisness {
         articoloComposito.setCorsia(corsia);
         articoloComposito.setProduttore(produttore);
         articoloComposito.setDescrizione(descrizione);
+        articoloComposito.setImmagine(path);
         ArrayList<Composizione> composizioneArrayList= new ArrayList<>();
         int i=0;
         for(Object c:  composizione ){
@@ -142,14 +188,109 @@ public class ArticoloBuisness {
 
     }
 
+    public int updateProdottoComposito(String nome, float prezzo, Categoria categoria, int scaffale, int corsia, Produttore produttore, String descrizione, List<Object> composizione, List<Integer> quantita, String path, String id) {
+
+        ArticoloComposito articoloComposito = new ArticoloComposito();
+        articoloComposito.setNome(nome);
+        articoloComposito.setPrezzo(prezzo);
+        articoloComposito.setCategoria(categoria);
+        articoloComposito.setScaffale(scaffale);
+        articoloComposito.setCorsia(corsia);
+        articoloComposito.setProduttore(produttore);
+        articoloComposito.setDescrizione(descrizione);
+        articoloComposito.setImmagine(path);
+        articoloComposito.setId(id);
+        ArrayList<Composizione> composizioneArrayList = new ArrayList<>();
+        int i = 0;
+        for (Object c : composizione) {
+            Articolo articolo = (Articolo) c;
+            Composizione comp = new Composizione();
+            comp.setArticolo(articolo);
+            comp.setQuantita(quantita.get(i));
+            i++;
+            composizioneArrayList.add(comp);
+        }
+        articoloComposito.setComposizione(composizioneArrayList);
+
+        return ArticoloCompositoDao.getInstance().update(articoloComposito);
+
+    }
+
+
+    public int addComposizione(Object o, Object c){
+        if (!(o instanceof ArticoloComposito && c instanceof Composizione)) {
+            return -1;
+        }
+        return ArticoloCompositoDao.getInstance().addComposizione((Composizione) c, (ArticoloComposito) o);
+
+    }
+
+    public int updateComposizione(Object o, Object c){
+        if (!(o instanceof ArticoloComposito && c instanceof Composizione)) {
+
+            return -1;
+        }
+        return ArticoloCompositoDao.getInstance().updateComposizione((Composizione) c, (ArticoloComposito) o);
+
+    }
+
+    public int updateQuantitaComposizione(Object o, int i){
+        if (!(o instanceof Composizione)) {
+
+            return -1;
+        }
+        return ArticoloCompositoDao.getInstance().updateQuantitaComposizione((Composizione) o, i);
+    }
+
+    public int deleteComposizione(Object o ){
+        if (!(o instanceof Composizione)) {
+
+            return -1;
+        }
+        return ArticoloCompositoDao.getInstance().deleteComposizione((Composizione) o);
+    }
+
+        public int remove(Object o){
+        if(o instanceof ArticoloComposito){
+            return ArticoloCompositoDao.getInstance().remove(((ArticoloComposito) o).getId());
+        }
+        if(o instanceof Servizio){
+            return ServizioDao.getInstance().remove(((Servizio) o).getId());
+        }
+        if (o instanceof Articolo){
+            return ProdottoDao.getInstance().remove(((Articolo) o).getId());
+        }
+        return -1;
+    }
     public String getNome(Object b){
         Articolo a= (Articolo) b;
         return a.getNome();
 
     }
+
+    public String getPath(Object b){
+        Articolo a= (Articolo) b;
+        if (a.getImmagine()== null)
+            a.setImmagine(new Immagine());
+        return a.getImmagine().getPath();
+
+    }
+
     public String geIdArticolo(Object b){
         Articolo a= (Articolo) b;
         return a.getId();
+
+    }
+
+    public String getImmaginePath(Object b){
+        Articolo a= (Articolo) b;
+        return a.getImmagine().getPath();
+
+    }
+
+    public File getImmagineFile(Object b){
+        Articolo a= (Articolo) b;
+        return a.getImmagine().getFile();
 
     }
 
@@ -207,9 +348,83 @@ public class ArticoloBuisness {
     }
 
 
+    public boolean isProdotto(Object o){
+        return o instanceof Prodotto;
+
+    }
+
+    public boolean isCServizio(Object o){
+        return o instanceof Servizio;
+
+    }
 
     //Prodotti Compositi
 
 
+    public boolean isComposito(Object o){
+        return o instanceof ArticoloComposito;
+
+    }
+
+    public Object getComposizione(Object o){
+        if(!instance.isComposito(o))
+            return null;
+
+        return ArticoloCompositoDao.getInstance().findComposizione((ArticoloComposito) o);
+
+
+    }
+
+    public Object getFinalComposizione(Object o){
+        if(!instance.isComposito(o))
+            return null;
+
+        ArticoloComposito a= (ArticoloComposito) o;
+        return a.getComposizione();
+
+
+    }
+
+
+    public int getComposizioneQuantita(Object o){
+        if(!(o instanceof  Composizione))
+            return -1;
+
+        return  ((Composizione) o).getQuantita();
+
+    }
+
+    public String geIdComposizione(Object o){
+        if(!(o instanceof  Composizione))
+            return null;
+
+        return  ((Composizione) o).getId();
+
+    }
+
+    public Object getComposizioneArticolo(Object o){
+        if(!(o instanceof  Composizione))
+            return null;
+
+        return  ((Composizione) o).getArticolo();
+    }
+
+    public String getComposizioneArticoloNome(Object o){
+        if(!(o instanceof  Composizione))
+            return null;
+
+        return  ((Composizione) o).getArticolo().getNome();
+    }
+
+    public void setComposizione(Object o, Object a, int i){
+        if (o instanceof ArticoloComposito && a instanceof Articolo){
+            Composizione composizione= new Composizione();
+            composizione.setArticolo((Articolo) a);
+            composizione.setQuantita(i);
+
+            ((ArticoloComposito) o).setComposizione(composizione);
+        }
+
+    }
 
 }

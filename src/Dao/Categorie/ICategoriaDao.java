@@ -11,6 +11,8 @@ public interface ICategoriaDao {
     Categoria findCategoria(String id);
     ArrayList<Categoria> findCategoriaByName(String nome);
     ArrayList<Categoria> findAll();
+    ArrayList<Categoria> findChild(Categoria i);
+
     int update(Object categoria);
     int remove(String id);
 

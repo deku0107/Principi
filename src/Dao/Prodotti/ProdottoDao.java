@@ -4,6 +4,8 @@ import DBInterface.command.DbOperationeExecutor;
 import DBInterface.command.IDbOperation;
 import DBInterface.command.ReadOperation;
 import DBInterface.command.WriteOperation;
+import Dao.Categorie.CategoriaDao;
+import Dao.UtilityDao;
 import Model.Categoria;
 import Model.Prodotti.Articolo;
 import Model.Prodotti.Prodotto;
@@ -37,6 +39,13 @@ public class ProdottoDao implements IArticoloDao {
         rowCount=executor.updateOperation(writeOp);
         if(rowCount<0)
             return -1;
+        int id = UtilityDao.getInstance().getMax("articolo", "idarticolo");
+
+        sql= "INSERT INTO `mydb`.`immagine` (`articolo`, `path`) VALUES ('"+id+"', '"+((Prodotto) articolo).getImmagine().getPath()+"');";
+        writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -2;
         return rowCount;
     }
 
@@ -97,6 +106,39 @@ public class ProdottoDao implements IArticoloDao {
 
             }
             return articoli;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
+    public Articolo findArticolo(String id,String c) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and categoria = '"+c+"' and idarticolo = '"+id+"';");
+        rs = executor.executeOperation(readOp);
+
+        try {
+            ArrayList<Articolo> articoli= new ArrayList<>();
+            while (rs.next()){
+                Prodotto prodotto = new Prodotto();
+                prodotto.setNome(rs.getString("nome"));
+                prodotto.setPrezzo(rs.getFloat("prezzo"));
+                Produttore produttore= new Produttore();
+                produttore.setId(rs.getString("produttore"));
+                prodotto.setProduttore(produttore);
+                Categoria categoria= CategoriaDao.getInstance().findCategoria(rs.getString("categoria"));
+                prodotto.setCategoria(categoria);
+                prodotto.setDescrizione(rs.getString("descrizione"));
+
+                return prodotto;
+
+            }
+
 
         }catch (SQLException e ){
             System.out.println("SQL exception:  " + e.getMessage());
@@ -223,6 +265,12 @@ public class ProdottoDao implements IArticoloDao {
         }
 
 
+        System.out.println(prodotto.getNome());
+        System.out.println(prodotto.getPrezzo());
+        System.out.println(prodotto.getProduttore().getId());
+        System.out.println(prodotto.getCategoria().getId());
+        System.out.println(prodotto.getDescrizione());
+        System.out.println(prodotto.getId());
         String sql="UPDATE `mydb`.`articolo` SET `nome` = '"+prodotto.getNome()+"', `prezzo` = '"+prodotto.getPrezzo()+"', `produttore` = '"+prodotto.getProduttore().getId()+"', `categoria` = '"+prodotto.getCategoria().getId()+"', `descrizione` = '"+prodotto.getDescrizione()+"' WHERE (`idarticolo` = '"+prodotto.getId()+"');";
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation writeOp = new WriteOperation(sql);

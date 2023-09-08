@@ -2,6 +2,9 @@ package ActionListener.AmministratoreListener;
 
 import Buisness.*;
 import Dao.PuntoVendita.OffertaDAO;
+import ViewProveETest.GridBagLayoutPanel;
+import ViewProveETest.Prove.Amministratore.Articoli.InserimentoArticoliPanel;
+import ViewProveETest.Prove.Amministratore.Articoli.ModificaProdottoPanel;
 import ViewProveETest.Prove.Amministratore.Categoria.CategoriaPanel;
 import ViewProveETest.Prove.Amministratore.Categoria.RigaCategoriaPanel;
 import ViewProveETest.Prove.Amministratore.Manager.CancellazioneManagerPanel;
@@ -87,9 +90,75 @@ public class AmministratoreListener implements ActionListener {
             nuovaOfferta();
         if (e.getActionCommand().equalsIgnoreCase("aggiungi_all_offerta"))
             aggiungiOfferta();
-
-        
+        if (e.getActionCommand().equalsIgnoreCase("elimina_prodotto_admin"))
+            eliminaProdotto();
+        if (e.getActionCommand().equalsIgnoreCase("modifica_prodotto_admin"))
+            modificaProdotto();
+        if (e.getActionCommand().equalsIgnoreCase("effettua_modifica_prodotto"))
+            effetuaModificaProdotto();
     }
+
+    private void effetuaModificaProdotto() {
+        ModificaProdottoPanel p= (ModificaProdottoPanel) panel;
+
+        int i= JOptionPane.showConfirmDialog(p, "Sei sicuro di voler modificare l'articolo selezionato?");
+        if(i==JOptionPane.YES_OPTION){
+            Object o= p.getO();
+
+            if (ArticoloBuisness.getInstance().isProdotto(o)){
+                System.out.println(p.getNome().getText());
+                System.out.println(Float.parseFloat(p.getPrezzo().getText()));
+                System.out.println(CategoriaBuisness.getInstance().getCategorie().get(p.getCategoria().getSelectedIndex()).getNome());
+                System.out.println(ProduttoreBuisness.getInstance().getProduttori().get(p.getProduttore().getSelectedIndex()).getNome());
+                System.out.println(p.getDescrizione().getText());
+                System.out.println(p.getPath());
+
+                int j=ArticoloBuisness.getInstance().updateProdotto(p.getNome().getText(),Float.parseFloat(p.getPrezzo().getText()), CategoriaBuisness.getInstance().getCategorie().get(p.getCategoria().getSelectedIndex()),0,0, ProduttoreBuisness.getInstance().getProduttori().get(p.getProduttore().getSelectedIndex()), p.getDescrizione().getText(), p.getPath(), ArticoloBuisness.getInstance().geIdArticolo(o));
+                if (j>=0){
+                    JOptionPane.showMessageDialog(null, "Prodotto modificato");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Prodotto non modificato");
+                }
+            }
+
+            if (ArticoloBuisness.getInstance().isComposito(o)){
+
+                int j=ArticoloBuisness.getInstance().updateProdottoComposito(p.getNome().getText(),Float.parseFloat(p.getPrezzo().getText()), CategoriaBuisness.getInstance().getCategorie().get(p.getCategoria().getSelectedIndex()),0,0, ProduttoreBuisness.getInstance().getProduttori().get(p.getProduttore().getSelectedIndex()), p.getDescrizione().getText(), null, null, p.getPath(), ArticoloBuisness.getInstance().geIdArticolo(o));
+                if (j>=0){
+                    JOptionPane.showMessageDialog(null, "Prodotto modificato");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Prodotto non modificato");
+                }
+            }
+
+        }
+
+    }
+
+    private void modificaProdotto() {
+        GridBagLayoutPanel p= (GridBagLayoutPanel) panel;
+        home.getNord().removeAll();
+        home.getNord().add(home.getBack());
+
+        home.getCentro().removeAll();
+        home.getCentro().add(new ModificaProdottoPanel(p.getArticolo()));
+        home.repaint();
+        home.validate();
+
+    }
+
+    private void eliminaProdotto() {
+        GridBagLayoutPanel p= (GridBagLayoutPanel) panel;
+        int i= JOptionPane.showConfirmDialog(p, "Sei sicuro di voler eliminare l'articolo selezionato?");
+        if(i==JOptionPane.YES_OPTION){
+            int j=ArticoloBuisness.getInstance().remove(p.getArticolo());
+            if (j>=0){
+                JOptionPane.showMessageDialog(null, "Prodotto eliminato");
+            }else{
+                JOptionPane.showMessageDialog(null, "Prodotto non eliminato");
+            }
+        }
+     }
 
     private void aggiungiOfferta() {
         ElencoOfferta p= (ElencoOfferta) panel;
@@ -485,7 +554,19 @@ public class AmministratoreListener implements ActionListener {
 
     private void gestioneCatalogo() {
 
-    }
+
+            home.getNord().removeAll();
+            home.getNord().add(home.getBack());
+
+            home.getCentro().removeAll();
+
+            home.getCentro().add(new InserimentoArticoliPanel());
+
+            home.repaint();
+            home.validate();
+        }
+
+
 
     private void gestioneManager(){
 

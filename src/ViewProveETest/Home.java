@@ -67,7 +67,7 @@ public class Home extends JFrame {
         c.add(nord, BorderLayout.NORTH);
         c.add(centro, BorderLayout.CENTER);
         c.add(sud, BorderLayout.SOUTH);
-
+        c.add(west, BorderLayout.WEST);
 
         aggiornaMenuPulsanti();
 
@@ -93,6 +93,7 @@ public class Home extends JFrame {
     public void aggiornaMenuPulsanti() {
         centro.removeAll();
         centro.setLayout(new GridLayout(2,2,10,10));
+        west.removeAll();
         nord.removeAll();
         nord.setLayout(new FlowLayout((FlowLayout.CENTER ), 20, 10));
         nord.add(new JLabel("Benvenuto"));
@@ -142,7 +143,7 @@ public class Home extends JFrame {
         centro.setLayout(new GridLayout(1,1));
         CarrelloPanel carrelloPanel= CarrelloPanel.getInstance();
         est.add(carrelloPanel);
-        centro.add(new CatalogoPanel());
+        new CatalogoPanel();
 
 
         repaint();
