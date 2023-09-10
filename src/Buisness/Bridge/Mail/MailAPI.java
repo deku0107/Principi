@@ -21,6 +21,8 @@ public class MailAPI implements IMailAPI{
             PASSWORD="jpmnsahvpofiadaj";
         }else if (osName.equalsIgnoreCase("Mac OS X")){
             PASSWORD="wgkyetaesgnpijad";
+        }else if (osName.equalsIgnoreCase("Linux")){
+            PASSWORD="oornevcesxirynyo";
         }
 
         System.out.println(osName);
