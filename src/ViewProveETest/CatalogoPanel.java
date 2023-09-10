@@ -11,21 +11,45 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoPanel extends JPanel {
 
-    private final JPanel mainList;
+    private  JPanel mainList;
     private JTree productTree;
     private List articoli;
+    private List carrello;
+    private JButton carrelloButton;
+    private CarrelloPanel carrelloPanel;
+
 
     public CatalogoPanel(){
 
         mainList= new JPanel(new GridBagLayout());
         setLayout(new BorderLayout());
 
+        carrello= new ArrayList();
+
         //List articoli;
         if(SessionManager.getSession().get(SessionManager.LOGGED_USER)!=null){
+            carrelloButton= new JButton("Conferma lista");
+            carrelloButton.setActionCommand("conferma_lista");
+            carrelloButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Home.getInstance().getCentro().removeAll();
+                    Home.getInstance().getEst().removeAll();
+                    Home.getInstance().getWest().removeAll();
+                    Home.getInstance().getNord().remove(carrelloButton);
+                    new ListaPanel(carrelloPanel);
+                    Home.getInstance().repaint();
+                    Home.getInstance().validate();
+                }
+            });
+            Home.getInstance().getNord().add(carrelloButton);
             articoli= ArticoloBuisness.getInstance().getCatalogo();
             popola(articoli);
         }else if(SessionManager.getSession().get(SessionManager.LOGGED_MANAGER)!=null){
@@ -52,13 +76,37 @@ public class CatalogoPanel extends JPanel {
     }
 
 
+    public void Update(){
+        mainList.removeAll();
+        mainList= new JPanel(new GridBagLayout());
+        setLayout(new BorderLayout());
+
+
+        //List articoli;
+        if(SessionManager.getSession().get(SessionManager.LOGGED_USER)!=null){
+
+            articoli= ArticoloBuisness.getInstance().getCatalogo();
+            popola(articoli);
+        }else if(SessionManager.getSession().get(SessionManager.LOGGED_MANAGER)!=null){
+            articoli=ArticoloBuisness.getInstance().getCatalogoManager();
+            popola(articoli);
+
+        }else
+        {
+            articoli = ArticoloBuisness.getInstance().getProdotti();
+            popola(articoli);
+        }
+
+
+
+    }
     private void popola(List<Object> articoli){
         Home.getInstance().getCentro().removeAll();
         Home.getInstance().getCentro().setLayout(new GridLayout(1,1));
         mainList.removeAll();
         int i=1;
         for (Object articolo:articoli){
-            GridBagLayoutPanel gridBagLayoutPanel=new GridBagLayoutPanel();
+            GridBagLayoutPanel gridBagLayoutPanel=new GridBagLayoutPanel(this);
 
             gridBagLayoutPanel.updateData(articolo);
 
@@ -78,8 +126,8 @@ public class CatalogoPanel extends JPanel {
 
         Home.getInstance().getCentro().add(scrollPane, BorderLayout.CENTER);
 
-        Home.getInstance().getCentro().repaint();
-        Home.getInstance().getCentro().validate();
+        Home.getInstance().repaint();
+        Home.getInstance().validate();
 
     }
 
@@ -146,6 +194,13 @@ public class CatalogoPanel extends JPanel {
         Home.getInstance().getWest().add(scrollPane, BorderLayout.WEST);
         Home.getInstance().getWest().setSize(Home.getInstance().getWest().getWidth(), (int) Home.getInstance().getSize().getHeight());
 
+        carrelloPanel= new CarrelloPanel(this);
+        JScrollPane scrollPane1= new JScrollPane(carrelloPanel);
+        Home.getInstance().getEst().add(scrollPane1);
+        Home.getInstance().getEst().setSize(Home.getInstance().getEst().getWidth(), (int) Home.getInstance().getSize().getHeight());
+
+        Home.getInstance().repaint();
+        Home.getInstance().validate();
 
     }
 
@@ -168,4 +223,13 @@ public class CatalogoPanel extends JPanel {
 
 
     }
+
+    public CarrelloPanel getCarrelloPanel() {
+        return carrelloPanel;
+    }
+
+    public List getCarrello() {
+        return carrello;
+    }
 }
+

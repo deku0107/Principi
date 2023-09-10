@@ -1,7 +1,6 @@
 package ViewProveETest;
 
-import Buisness.SessionManager;
-import Model.Prodotti.Articolo;
+import Buisness.ArticoloBuisness;
 
 
 import javax.swing.*;
@@ -12,22 +11,25 @@ import java.util.List;
 
 public class CarrelloPanel extends JPanel {
 
-    private static List<Articolo> articoloList;
+    private static List articoloList;
     private static float totale;
-    private static JPanel panel;
+    private  JTextArea elenco;
+    private String lista;
+    private JPanel panel;
     private static JLabel sud;
-    private static CarrelloPanel instance =new CarrelloPanel();
+    private  JScrollPane jScrollPane;
+    private CatalogoPanel catalogoPanel;
 
-    public static CarrelloPanel getInstance(){return instance;}
-
-    public CarrelloPanel(){
+    public CarrelloPanel(CatalogoPanel catalogoPanel){
 
 
+        this.catalogoPanel= catalogoPanel;
         setLayout(new BorderLayout());
         sud=new JLabel();
-        panel= new JPanel(new GridLayout(0,1));
+        panel= new JPanel();
         add(new JLabel("Carrello"), BorderLayout.NORTH);
         add(sud, BorderLayout.SOUTH);
+        add(panel, BorderLayout.CENTER);
         update();
 
         repaint();
@@ -36,42 +38,56 @@ public class CarrelloPanel extends JPanel {
 
     public void update(){
 
-        articoloList= (List<Articolo>) SessionManager.getSession().get(SessionManager.CARRELLO);
+        articoloList = catalogoPanel.getCarrello();
+
+        System.out.println("Update articolo list size" + articoloList.size());
+
 
 
         panel.removeAll();
         totale=0F;
+        lista="";
+        elenco= new JTextArea();
+        elenco.setEditable(false);
 
 
-        int i=0;
-        for(Articolo articolo:articoloList){
 
-            panel.add(new JLabel(articolo.getNome()), i);
-            i++;
-            totale+=articolo.getPrezzo();
-            System.out.println("I " + i);
+        for(Object articolo: articoloList){
+
+            lista+=(ArticoloBuisness.getInstance().getNome(articolo)+"\n");
+
+            totale+=ArticoloBuisness.getInstance().getPrezzo(articolo);
+
         }
 
-        System.out.println("Totale "+ totale);
 
-        panel.setPreferredSize(new Dimension(200,400));
-        JScrollPane jScrollPane= new JScrollPane(panel);
+
+        elenco.setPreferredSize(new Dimension(200,400));
+        elenco.setText(lista);
+        elenco.setVisible(true);
+
+
+        jScrollPane= new JScrollPane(elenco);
+
 
         jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        add(jScrollPane, BorderLayout.CENTER);
 
-        System.out.println("Totale finale " + totale);
+        panel.add(jScrollPane);
+
         sud.removeAll();
         sud.setText("Totale da pagare: " + totale + " Euro");
 
+        repaint();
+        validate();
+
     }
 
-    public List<Articolo> getArticoloList() {
+    public List<Object> getArticoloList() {
         return articoloList;
     }
 
-    public void setArticoloList(List<Articolo> articoloList) {
+    public void setArticoloList(List<Object> articoloList) {
         this.articoloList = articoloList;
     }
 

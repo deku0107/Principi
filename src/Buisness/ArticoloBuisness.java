@@ -34,6 +34,15 @@ public class ArticoloBuisness {
         return articoloList;
     }
 
+    public Articolo getProdotto(String id){
+        Articolo a = ProdottoDao.getInstance().findArticolo(id);
+        if (a==null)
+            a= ArticoloCompositoDao.getInstance().findArticolo(id);
+        if(a==null)
+            a= ServizioDao.getInstance().findArticolo(id);
+        return a;
+
+    }
     public List<Articolo> getProdotti(String categoria){
 
         Categoria c= CategoriaDao.getInstance().findCategoriaByName(categoria).get(0);

@@ -20,6 +20,7 @@ public class GridBagLayoutPanel extends JPanel {
     private JButton btn6;
     private JButton btn7;
     private JLabel btn8;
+    private CatalogoPanel catalogoPanel;
     JComboBox<Integer> comboBox;
 
 
@@ -33,12 +34,15 @@ public class GridBagLayoutPanel extends JPanel {
         btn5.setText(a.getDescrizione(articolo));
         btn8.setText(String.valueOf(a.getQuantita(articolo)));
 
+        
+
     }
 
-    public GridBagLayoutPanel(){
+    public GridBagLayoutPanel(CatalogoPanel catalogoPanel){
 
 
 
+        this.catalogoPanel=catalogoPanel;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc= new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -93,7 +97,7 @@ public class GridBagLayoutPanel extends JPanel {
         add(btn5, gbc);
 
         ActionListener actionListener= new CatalogoListener(this);
-        btn6= new JButton("+Lista");
+        btn6= new JButton("+Carrello");
         btn6.setActionCommand("+Lista");
         btn6.addActionListener(actionListener);
         gbc.gridx=4;
@@ -246,5 +250,9 @@ public class GridBagLayoutPanel extends JPanel {
 
     public void setComboBox(JComboBox<Integer> comboBox) {
         this.comboBox = comboBox;
+    }
+
+    public CatalogoPanel getCatalogoPanel() {
+        return catalogoPanel;
     }
 }

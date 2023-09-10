@@ -34,7 +34,7 @@ public class CatalogoTableModel extends AbstractTableModel {
 
         if(columnIndex==0){
 
-        return new GridBagLayoutPanel();}
+        return new GridBagLayoutPanel(null);}
         return null;
     }
 

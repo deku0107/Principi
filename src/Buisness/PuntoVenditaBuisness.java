@@ -5,6 +5,7 @@ import Dao.PuntoVendita.OffertaDAO;
 import Dao.PuntoVendita.PuntoVenditaDao;
 import Model.PuntoVendita;
 import Model.Utenti.Manager;
+import Model.Utenti.UtenteAcquirente;
 
 import javax.swing.*;
 import java.util.List;
@@ -68,6 +69,12 @@ public class PuntoVenditaBuisness {
        return PuntoVenditaDao.getInstance().findByManager(id);
     }
 
+    public PuntoVendita findBySessioneUser() {
+        UtenteAcquirente utenteAcquirente = (UtenteAcquirente) SessionManager.getSession().get(SessionManager.LOGGED_USER);
+        String id= utenteAcquirente.getId();
+        return PuntoVenditaDao.getInstance().findByUser(id);
+    }
+
     public PuntoVendita getNull(){
         return new PuntoVendita();
 
@@ -83,6 +90,11 @@ public class PuntoVenditaBuisness {
     public int updateQuantita(String idArticolo, String idPuntoVendita, int i) {
 
     return OffertaDAO.getInstance().updateQuantita(idArticolo, idPuntoVendita, i);
+    }
+
+    public int updateQuantita(String idArticolo, String idPuntoVendita) {
+
+        return OffertaDAO.getInstance().updateQuantita(idArticolo, idPuntoVendita);
     }
 
     public String getNome(Object p){
@@ -190,5 +202,9 @@ public class PuntoVenditaBuisness {
     }
 
 
+    public int removeQuantita(String idA, String idPV) {
+
+        return OffertaDAO.getInstance().removeQuantita(idA, idPV);
+    }
 }
 

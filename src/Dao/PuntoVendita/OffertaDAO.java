@@ -118,6 +118,19 @@ public class OffertaDAO implements IOffertaDAO{
         return rowCount;
     }
 
+
+
+    public int updateQuantita(String idArticolo, String idPuntoVendita) {
+        String sql="UPDATE `mydb`.`offerta` SET `quantita` = `quantita` + '1' WHERE (`articolo` = '"+idArticolo+"' and `punto_vendita` = '"+idPuntoVendita+"');";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
+        return rowCount;
+    }
     @Override
     public int remove(String idArticolo, String idPuntoVendita) {
 
@@ -149,4 +162,16 @@ public class OffertaDAO implements IOffertaDAO{
     }
 
 
+    public int removeQuantita(String idA, String idPV) {
+
+        String sql="UPDATE `mydb`.`offerta` SET `quantita` = `quantita` - '1' WHERE (`articolo` = '"+idA+"' and `punto_vendita` = '"+idPV+"');";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount=executor.updateOperation(writeOp);
+        if(rowCount<0)
+            return -1;
+
+        return rowCount;
+    }
 }

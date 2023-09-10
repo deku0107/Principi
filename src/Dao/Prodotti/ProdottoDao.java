@@ -41,11 +41,13 @@ public class ProdottoDao implements IArticoloDao {
             return -1;
         int id = UtilityDao.getInstance().getMax("articolo", "idarticolo");
 
-        sql= "INSERT INTO `mydb`.`immagine` (`articolo`, `path`) VALUES ('"+id+"', '"+((Prodotto) articolo).getImmagine().getPath()+"');";
-        writeOp = new WriteOperation(sql);
-        rowCount=executor.updateOperation(writeOp);
-        if(rowCount<0)
-            return -2;
+        if(prodotto.getImmagine()!=null){
+            sql = "INSERT INTO `mydb`.`immagine` (`articolo`, `path`) VALUES ('" + id + "', '" + ((Prodotto) articolo).getImmagine().getPath() + "');";
+            writeOp = new WriteOperation(sql);
+            rowCount = executor.updateOperation(writeOp);
+            if (rowCount < 0)
+                return -2;
+        }
         return rowCount;
     }
 

@@ -51,6 +51,26 @@ public class PuntoVenditaDao implements IPuntoVenditaDAO{
 
         return null;
     }
+    public PuntoVendita findByUser(String id) {
+        String sql = "SELECT id_punto_vendita FROM mydb.utente_acquirente where id='"+id+"';";
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation(sql);
+        rs = executor.executeOperation(readOp);
+        try {
+            rs.next();
+            if(rs.getRow()==1){
+                return findById(rs.getString("id_punto_vendita"));
+            }
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+        return null;
+    }
+
 
     @Override
     public PuntoVendita findByManager(String id) {

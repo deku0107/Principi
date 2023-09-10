@@ -17,7 +17,7 @@ public class TestGridBagLayout {
         List<JPanel> panels = new ArrayList<>();
         for (int i=0;i<5;i++){
             JPanel panel= new JPanel(new GridBagLayout());
-            GridBagLayoutPanel gridBagLayoutPanel= new GridBagLayoutPanel();
+            GridBagLayoutPanel gridBagLayoutPanel= new GridBagLayoutPanel(null);
             GridBagConstraints gbc= new GridBagConstraints();
 
             gbc.insets= new Insets(20,20,20,20);

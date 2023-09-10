@@ -87,8 +87,6 @@ public class InserimentoProdottoCompositoPanel extends JPanel {
 
                     articoli.add(ArticoloBuisness.getInstance().getProdotti().get(prodotti.getSelectedIndex()));
                     quantita.add(j);
-                    System.out.println(articoli);
-                    System.out.println(quantita);
 
                     lista+=ArticoloBuisness.getInstance().getProdotti().get(prodotti.getSelectedIndex()).getNome() + " X " + j +"\n";
 

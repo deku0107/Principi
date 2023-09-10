@@ -39,10 +39,14 @@ public class Home extends JFrame {
         super("HomePage");
 
         back= new JButton("Indietro");
+        back.setActionCommand("indietro");
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                if (e.getActionCommand().equalsIgnoreCase("indietro"))
                 aggiornaMenuPulsanti();
+
             }
         });
 
@@ -68,6 +72,7 @@ public class Home extends JFrame {
         c.add(centro, BorderLayout.CENTER);
         c.add(sud, BorderLayout.SOUTH);
         c.add(west, BorderLayout.WEST);
+        c.add(est, BorderLayout.EAST);
 
         aggiornaMenuPulsanti();
 
@@ -95,6 +100,7 @@ public class Home extends JFrame {
         centro.setLayout(new GridLayout(2,2,10,10));
         west.removeAll();
         nord.removeAll();
+        est.removeAll();
         nord.setLayout(new FlowLayout((FlowLayout.CENTER ), 20, 10));
         nord.add(new JLabel("Benvenuto"));
 
@@ -135,14 +141,14 @@ public class Home extends JFrame {
 
     public void mostraCatalogo() {
         nord.removeAll();
+        nord.setLayout(new FlowLayout());
         nord.add(back);
         List<Articolo> articoloList= new ArrayList<>();
         SessionManager.getSession().put(SessionManager.CARRELLO, articoloList);
         centro.removeAll();
         est.removeAll();
+        est.setLayout(new GridLayout(1,1));
         centro.setLayout(new GridLayout(1,1));
-        CarrelloPanel carrelloPanel= CarrelloPanel.getInstance();
-        est.add(carrelloPanel);
         new CatalogoPanel();
 
 

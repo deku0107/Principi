@@ -4,6 +4,7 @@ import Buisness.ArticoloBuisness;
 import Buisness.PuntoVenditaBuisness;
 import Buisness.SessionManager;
 import ViewProveETest.CarrelloPanel;
+import ViewProveETest.CatalogoPanel;
 import ViewProveETest.GridBagLayoutPanel;
 import ViewProveETest.MainClass;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class CatalogoListener implements ActionListener {
 
     private GridBagLayoutPanel gridBagLayoutPanel;
-    List<Object> articoloList= (List<Object>) SessionManager.getSession().get(SessionManager.CARRELLO);
+    List<Object> articoloList;
 
     public CatalogoListener(GridBagLayoutPanel gridBagLayoutPanel){
         this.gridBagLayoutPanel=gridBagLayoutPanel;
@@ -45,11 +46,9 @@ public class CatalogoListener implements ActionListener {
             }
 
         }else if(e.getActionCommand().equalsIgnoreCase("+lista")){
-
-            articoloList.add(gridBagLayoutPanel.getArticolo());
-            System.out.println(articoloList.size());
-            CarrelloPanel.getInstance().update();
-            }else if(e.getActionCommand().equalsIgnoreCase("ordina")){
+            addLista(gridBagLayoutPanel.getCatalogoPanel().getCarrello());//prendere la lista
+            }
+        else if(e.getActionCommand().equalsIgnoreCase("ordina")){
             //ordian da parte dell' utente
             }else if(e.getActionCommand().equalsIgnoreCase("ordina_manager")){
             ordinaManager();
@@ -58,6 +57,44 @@ public class CatalogoListener implements ActionListener {
 
         }
 
+
+        private void addLista(List<Object> lista){
+
+
+            JComboBox<Object> q=new JComboBox<>();
+            for(int i = 1; i<= ArticoloBuisness.getInstance().getQuantita(gridBagLayoutPanel.getArticolo()); i++)
+                q.addItem(i);
+
+            int input=JOptionPane.showConfirmDialog(null, q, "Inserire quantita'", JOptionPane.YES_NO_OPTION);
+            if(input==JOptionPane.YES_OPTION){
+                articoloList= lista;
+                articoloList.add(gridBagLayoutPanel.getArticolo());
+                System.out.println("Si");
+                int j=q.getSelectedIndex()+1;
+
+                System.out.println("Quantita " + j);
+                for (int x=0;x<j-1;x++) {
+                    articoloList.add(gridBagLayoutPanel.getArticolo());
+                }
+
+                int y=Integer.parseInt(gridBagLayoutPanel.getBtn8().getText())-j;//valore del prodotto riferito alla quantita
+                String idA= ArticoloBuisness.getInstance().geIdArticolo(gridBagLayoutPanel.getArticolo());
+                String idPV= PuntoVenditaBuisness.getInstance().findBySessioneUser().getId();
+
+                int w= PuntoVenditaBuisness.getInstance().updateQuantita(idA, idPV, y);
+                if(w>0){
+                    gridBagLayoutPanel.getCatalogoPanel().Update();
+                    gridBagLayoutPanel.getCatalogoPanel().getCarrelloPanel().update();
+                }
+
+
+            }else  if(input==JOptionPane.NO_OPTION){
+                System.out.println("No");
+            }
+
+
+
+        }
     private void ordinaManager() {
 
         String[] option ={"Si", "No"};
