@@ -7,6 +7,8 @@ public class Immagine {
     private File file;
     private String path;
 
+
+
     public Immagine (){
 
 
@@ -21,6 +23,13 @@ public class Immagine {
     }
 
     public String getPath() {
+
+        if (path==null)
+            return null;
+        return path.replace("src/Resources/Immagini/", "");
+    }
+
+    public String getRootPath(){
         return path;
     }
 
@@ -28,3 +37,5 @@ public class Immagine {
         this.path = path;
     }
 }
+
+

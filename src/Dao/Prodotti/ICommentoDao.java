@@ -3,7 +3,6 @@ package Dao.Prodotti;
 import Model.Commento;
 import Model.PuntoVendita;
 import Model.Utenti.UtenteAcquirente;
-import ViewProveETest.Prove.UtenteAcquirente.CommentoPanel;
 
 import java.util.ArrayList;
 
@@ -14,5 +13,8 @@ public interface ICommentoDao {
     int commento(Object commento);
     void modificaCommento(Object commento);
     int eliminaCommento(Object commento);
-
+    int risposta(String risposta, Commento commento, String idM);
+    String getRisposta(Commento commento);
+    String getRispostaId(Commento commento);
+    int deleteRisposta(String id);
 }

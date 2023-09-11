@@ -6,6 +6,10 @@ public class Categoria {
     private Categoria categoriaPadre;
     private String descrizione;
 
+
+
+
+
     public String getId() {
         if(id==null)
             return "10";
@@ -42,3 +46,7 @@ public class Categoria {
         this.descrizione = descrizione;
     }
 }
+
+
+
+

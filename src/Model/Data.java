@@ -5,6 +5,8 @@ public class Data {
     private int mese;
     private int anno;
 
+
+
     public Data(String data){
         setData(data);
 
@@ -47,3 +49,5 @@ public class Data {
 
     }
 }
+
+

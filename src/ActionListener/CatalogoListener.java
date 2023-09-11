@@ -3,10 +3,8 @@ package ActionListener;
 import Buisness.ArticoloBuisness;
 import Buisness.PuntoVenditaBuisness;
 import Buisness.SessionManager;
-import ViewProveETest.CarrelloPanel;
-import ViewProveETest.CatalogoPanel;
-import ViewProveETest.GridBagLayoutPanel;
-import ViewProveETest.MainClass;
+import View.GridBagLayoutPanel;
+import View.MainClass;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -108,7 +108,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
     @Override
     public  Articolo findArticolo(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+id+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -126,6 +126,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setComposizione(findComposizione(prodotto));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                return prodotto;
 
@@ -144,7 +149,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
     public  Articolo findArticolo(String id, String c) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+id+"' and categoria='"+c+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito' and idarticolo = '"+id+"' and categoria='"+c+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -163,6 +168,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setComposizione(findComposizione(prodotto));
 
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
                 return prodotto;
 
             }
@@ -182,7 +192,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
     public ArrayList<Articolo> findArticolo() {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -201,6 +211,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 //prodotto.setComposizione(findComposizione(prodotto));
 
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
                 articoli.add(prodotto);
 
             }
@@ -224,7 +239,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
     public ArrayList<Articolo> findArticolo(Categoria c) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and categoria= '"+c.getId()+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito' and categoria= '"+c.getId()+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -243,6 +258,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 //prodotto.setComposizione(findComposizione(prodotto));
 
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
                 articoli.add(prodotto);
 
             }
@@ -266,7 +286,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
 
     public Articolo findArticoloById(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+id+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -283,6 +303,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setComposizione(findComposizione(prodotto));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 return prodotto;
             }
@@ -300,7 +325,7 @@ public class ArticoloCompositoDao implements IArticoloDao{
     @Override
     public ArrayList<Articolo> findArticoloName(String nome) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'composito' and idarticolo = '"+nome+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'composito' and idarticolo = '"+nome+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -318,6 +343,11 @@ public class ArticoloCompositoDao implements IArticoloDao{
                 prodotto.setDescrizione(rs.getString("descrizione"));
                 prodotto.setComposizione(findComposizione(prodotto));
 
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
                 articoli.add(prodotto);
 
             }

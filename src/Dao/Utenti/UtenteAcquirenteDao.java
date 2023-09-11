@@ -69,6 +69,49 @@ public class UtenteAcquirenteDao implements IUtentiDao {
         return null;
     }
 
+    public UtenteAcquirente findByCommento(String id) {
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.utente_acquirente join mydb.commento on mydb.utente_acquirente.id= mydb.commento.utente where mydb.commento.idcommento='"+id+"';");
+        rs = executor.executeOperation(readOp);
+        try {
+            rs.next();
+            if(rs.getRow()==1){
+                UtenteAcquirente utente = new UtenteAcquirente();
+                utente.setId(rs.getString("id"));
+                utente.setUsername(rs.getString("username"));
+                utente.setNome(rs.getString("nome"));
+                utente.setCognome(rs.getString("cognome"));
+                utente.setEmail(rs.getString(("email")));
+                utente.setTelefono(rs.getString(("telefono")));
+                utente.setIndirizzo(rs.getString(("indirizzo")));
+                utente.setCitta(rs.getString(("citta")));
+                Data data=new Data();
+                data.setData(rs.getString("data_nascita"));
+                utente.setDataDiNascita(data);
+                utente.setPuntoVendita(PuntoVenditaDao.getInstance().findById(rs.getString("id_punto_vendita")));
+                String stato= rs.getString("stato");
+                if (stato.equalsIgnoreCase("attivo")){
+                    utente.setStato(UtenteAcquirente.Stato.ATTIVO);
+                }else if (stato.equalsIgnoreCase("bloccato")){
+                    utente.setStato(UtenteAcquirente.Stato.BLOCCATO);
+                }else if (stato.equalsIgnoreCase("eliminato")){
+                    utente.setStato(UtenteAcquirente.Stato.ELIMINATO);
+                }
+
+
+                return utente;
+            }
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+
+        return null;
+    }
+
     @Override
     public UtenteAcquirente findByUsername(String usr) {
         DbOperationeExecutor executor = new DbOperationeExecutor();

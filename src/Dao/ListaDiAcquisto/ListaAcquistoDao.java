@@ -10,6 +10,7 @@ import Dao.Prodotti.ServizioDao;
 import Dao.UtilityDao;
 import Model.ListaDiAcquisto;
 import Model.Prodotti.Articolo;
+import Model.Prodotti.ArticoloComposito;
 import Model.Utenti.UtenteAcquirente;
 
 import java.sql.ResultSet;
@@ -104,6 +105,47 @@ public class ListaAcquistoDao implements IListaAcquistoDao{
 
     public ArrayList<Articolo> getSingleArticolo(UtenteAcquirente utenteAcquirente){
         String sql =  "SELECT DISTINCT mydb.contenuto_lista.articolo as id,  mydb.articolo.tipo FROM mydb.contenuto_lista join mydb.lista_di_acquisto on mydb.contenuto_lista.lista = mydb.lista_di_acquisto.idlista_di_acquisto join mydb.articolo on mydb.contenuto_lista.articolo=mydb.articolo.idarticolo where mydb.lista_di_acquisto.utente='"+utenteAcquirente.getId()+"';";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation(sql);
+        rs = executor.executeOperation(readOp);
+        String id;
+
+        try {
+            ArrayList<Articolo> listaDiAcquistoArrayList= new ArrayList<>();
+            while (rs.next()){
+
+
+                id=(rs.getString("id"));
+                String tipo= rs.getString("tipo");
+                if (tipo.equalsIgnoreCase("composito")){
+                    ArticoloComposito a = (ArticoloComposito) ArticoloCompositoDao.getInstance().findArticolo(id);
+                    listaDiAcquistoArrayList.add(a);
+                }
+                if (tipo.equalsIgnoreCase("prodotto")){
+                    listaDiAcquistoArrayList.add(ProdottoDao.getInstance().findArticolo(id));
+                }
+                if (tipo.equalsIgnoreCase("servizio")){
+                    listaDiAcquistoArrayList.add(ServizioDao.getInstance().findArticolo(id));
+                }
+
+            }
+
+            return listaDiAcquistoArrayList;
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public ArrayList<Articolo> getSingleArticolo(String idPV){
+        String sql =  "SELECT DISTINCT mydb.contenuto_lista.articolo as id,  mydb.articolo.tipo FROM mydb.contenuto_lista join mydb.lista_di_acquisto on mydb.contenuto_lista.lista = mydb.lista_di_acquisto.idlista_di_acquisto join mydb.articolo on mydb.contenuto_lista.articolo=mydb.articolo.idarticolo join mydb.utente_acquirente on mydb.lista_di_acquisto.utente =mydb.utente_acquirente.id  where mydb.utente_acquirente.id_punto_vendita='"+idPV+"';";
 
         DbOperationeExecutor executor = new DbOperationeExecutor();
         IDbOperation readOp = new ReadOperation(sql);

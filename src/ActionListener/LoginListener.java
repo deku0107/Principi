@@ -5,8 +5,8 @@ import Buisness.SessionManager;
 import Buisness.Utente.LoginResult;
 import Buisness.Utente.UtenteBusiness;
 import Buisness.UtilityBuisness;
-import ViewProveETest.Home;
-import ViewProveETest.Prove.UtenteAcquirente.ResetPasswordPanel;
+import View.Home;
+import View.UtenteAcquirente.ResetPasswordPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

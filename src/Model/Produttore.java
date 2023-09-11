@@ -7,6 +7,8 @@ public class Produttore {
     private String citta;
     private String nazione;
 
+
+
     public String getId() {
         return id;
     }
@@ -47,3 +49,5 @@ public class Produttore {
         this.nazione = nazione;
     }
 }
+
+

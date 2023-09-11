@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class ArticoloComposito extends Prodotto{
 
     private float sconto;
-    private String nome;
     private ArrayList<Composizione> composizione;
+
+
 
     public float getSconto() {
         return sconto;
@@ -16,15 +17,6 @@ public class ArticoloComposito extends Prodotto{
         this.sconto = sconto;
     }
 
-    @Override
-    public String getNome() {
-        return nome;
-    }
-
-    @Override
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public ArrayList<Composizione> getComposizione() {
         return composizione;
@@ -42,3 +34,5 @@ public class ArticoloComposito extends Prodotto{
     }
 
 }
+
+

@@ -29,7 +29,9 @@ public class ArticoloBuisness {
 
     public List<Articolo> getProdotti(){
         List<Articolo> articoloList= ProdottoDao.getInstance().findArticolo();
+        System.out.println("Articolo 1 " + articoloList.size());
         List<Articolo> articoloList1=ArticoloCompositoDao.getInstance().findArticolo();
+        System.out.println("Articolo 2 " + articoloList1.size());
         articoloList.addAll(articoloList1);
         return articoloList;
     }
@@ -272,8 +274,11 @@ public class ArticoloBuisness {
         return -1;
     }
     public String getNome(Object b){
-        Articolo a= (Articolo) b;
+        if( b instanceof  Articolo a)
         return a.getNome();
+
+
+        return null;
 
     }
 

@@ -4,8 +4,11 @@ import Buisness.Bridge.PDF.DocumentoListaAcquisto;
 import Buisness.Bridge.PDF.PdfBoxAPI;
 import Buisness.SessionManager;
 import Dao.ListaDiAcquisto.ListaAcquistoDao;
+import Dao.PuntoVendita.PuntoVenditaDao;
 import Model.ListaDiAcquisto;
 import Model.Prodotti.Articolo;
+import Model.PuntoVendita;
+import Model.Utenti.Manager;
 import Model.Utenti.Utente;
 import Model.Utenti.UtenteAcquirente;
 
@@ -134,6 +137,12 @@ public class ListaBuisness {
     public List getSingleArticolo() {
         UtenteAcquirente utenteAcquirente=(UtenteAcquirente) SessionManager.getSession().get(SessionManager.LOGGED_USER) ;
             return ListaAcquistoDao.getInstance().getSingleArticolo(utenteAcquirente);
+
+    }
+
+    public List getSingleSingleArticoloManager() {
+        Manager m=(Manager) SessionManager.getSession().get(SessionManager.LOGGED_MANAGER) ;
+        return ListaAcquistoDao.getInstance().getSingleArticolo(PuntoVenditaDao.getInstance().findByManager(m.getId()).getId());
 
     }
 }

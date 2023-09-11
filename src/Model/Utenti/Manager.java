@@ -31,4 +31,8 @@ public class Manager extends Utente {
     public void setStipendio(float stipendio) {
         this.stipendio = stipendio;
     }
+
+
+
 }
+

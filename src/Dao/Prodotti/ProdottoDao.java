@@ -54,7 +54,7 @@ public class ProdottoDao implements IArticoloDao {
     @Override
     public Articolo findArticolo(String id) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and idarticolo = '"+id+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where idarticolo='"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -71,6 +71,12 @@ public class ProdottoDao implements IArticoloDao {
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
+
 
                 return prodotto;
 
@@ -89,7 +95,8 @@ public class ProdottoDao implements IArticoloDao {
 
     public ArrayList<Articolo> findArticolo(Categoria categoria) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and categoria = '"+categoria.getId()+"';");
+
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo  where tipo = 'prodotto' and categoria = '"+categoria.getId()+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -103,6 +110,11 @@ public class ProdottoDao implements IArticoloDao {
                 prodotto.setProduttore(produttore);
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 articoli.add(prodotto);
 
@@ -121,7 +133,7 @@ public class ProdottoDao implements IArticoloDao {
 
     public Articolo findArticolo(String id,String c) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and categoria = '"+c+"' and idarticolo = '"+id+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo  where tipo = 'prodotto' and categoria = '"+c+"' and idarticolo = '"+id+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -136,6 +148,11 @@ public class ProdottoDao implements IArticoloDao {
                 Categoria categoria= CategoriaDao.getInstance().findCategoria(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 return prodotto;
 
@@ -154,7 +171,7 @@ public class ProdottoDao implements IArticoloDao {
 
     public ArrayList<Articolo> findArticolo(Produttore produttore) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and produttore = '"+produttore.getId()+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'prodotto' and produttore = '"+produttore.getId()+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -168,6 +185,11 @@ public class ProdottoDao implements IArticoloDao {
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 articoli.add(prodotto);
 
@@ -186,7 +208,7 @@ public class ProdottoDao implements IArticoloDao {
 
     public ArrayList<Articolo> findArticolo() {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo='prodotto';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo='prodotto';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -208,6 +230,11 @@ public class ProdottoDao implements IArticoloDao {
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 articoli.add(prodotto);
 
@@ -227,7 +254,7 @@ public class ProdottoDao implements IArticoloDao {
     @Override
     public ArrayList<Articolo> findArticoloName(String nome) {
         DbOperationeExecutor executor = new DbOperationeExecutor();
-        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo where tipo = 'prodotto' and nome = '"+nome+"';");
+        IDbOperation readOp = new ReadOperation("SELECT * FROM mydb.articolo left join mydb.immagine on mydb.articolo.idarticolo= mydb.immagine.articolo where tipo = 'prodotto' and nome = '"+nome+"';");
         rs = executor.executeOperation(readOp);
 
         try {
@@ -243,6 +270,11 @@ public class ProdottoDao implements IArticoloDao {
                 categoria.setId(rs.getString("categoria"));
                 prodotto.setCategoria(categoria);
                 prodotto.setDescrizione(rs.getString("descrizione"));
+                String p= rs.getString("path");
+                System.out.println("Path in dao " + p);
+                if (p!=null){
+                    prodotto.setImmagine("src/Resources/Immagini/"+rs.getString("path"));
+                }
 
                 articoli.add(prodotto);
 

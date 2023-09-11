@@ -18,6 +18,10 @@ public class ListaDiAcquisto {
     private String id;
     private boolean stato; //true pagata, false da pagare
 
+
+
+
+
     public ListaDiAcquisto() {
         this.stato = false;
         lista= new ArrayList<>();
@@ -100,3 +104,5 @@ public class ListaDiAcquisto {
 
     }
 }
+
+

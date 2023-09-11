@@ -11,6 +11,10 @@ public class Prodotto extends Articolo{
     private int corsia;
     private int quantita;
 
+
+
+
+
     public int getQuantita() {
         return quantita;
     }
@@ -55,3 +59,7 @@ public class Prodotto extends Articolo{
         this.corsia = corsia;
     }
 }
+
+
+
+

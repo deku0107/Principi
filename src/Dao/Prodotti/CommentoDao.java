@@ -163,4 +163,86 @@ return null;
         }
         return -2;
     }
+
+    public int risposta(String risposta, Commento commento, String idM){
+
+        String sql="INSERT INTO `mydb`.`risposta` (`commento`, `manager`, `testo`) VALUES ('"+commento.getId()+"', '"+idM+"', '"+risposta+"');";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount = executor.updateOperation(writeOp);
+        if (rowCount < 0)
+            return -1;
+        return rowCount;
+
+    }
+
+    public int deleteRisposta(String id){
+
+        String sql="DELETE FROM `mydb`.`risposta` WHERE (`idrisposta` = '"+id+"');";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation writeOp = new WriteOperation(sql);
+        rowCount = executor.updateOperation(writeOp);
+        if (rowCount < 0)
+            return -1;
+        return rowCount;
+
+    }
+
+    public String getRisposta(Commento commento){
+
+        String sql= "SELECT * FROM mydb.risposta where commento='"+commento.getId()+"';";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation(sql);
+        rs = executor.executeOperation(readOp);
+        try {
+
+            rs.next();
+            if (rs.getRow()==1){
+
+                return rs.getString("testo");
+            }
+
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+
+        return null;
+
+    }
+
+    public String getRispostaId(Commento commento){
+
+        String sql= "SELECT * FROM mydb.risposta where commento='"+commento.getId()+"';";
+
+        DbOperationeExecutor executor = new DbOperationeExecutor();
+        IDbOperation readOp = new ReadOperation(sql);
+        rs = executor.executeOperation(readOp);
+        try {
+
+            rs.next();
+            if (rs.getRow()==1){
+
+                return rs.getString("idrisposta");
+            }
+
+
+        }catch (SQLException e ){
+            System.out.println("SQL exception:  " + e.getMessage());
+            System.out.println("SQL state:  " + e.getSQLState());
+            System.out.println("Vendor Error:  " + e.getErrorCode());
+        }catch (NullPointerException e) {
+            System.out.println("Result set " + e.getMessage());
+        }
+
+        return null;
+
+    }
 }

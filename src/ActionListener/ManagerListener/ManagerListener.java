@@ -1,12 +1,15 @@
 package ActionListener.ManagerListener;
 
 import Buisness.Utente.UtenteBusiness;
-import ViewProveETest.Home;
-import ViewProveETest.Prove.Manager.GestioneClientela.GestioneUtentiPanel;
-import ViewProveETest.Prove.Manager.GestioneClientela.invioEmailPanel;
-import ViewProveETest.Prove.Manager.GestioneClientela.rigaGestioneUtentiPanel;
+import View.Home;
+import View.Manager.Commenti.RispostaPanel;
+import View.Manager.GestioneClientela.GestioneUtentiPanel;
+import View.Manager.GestioneClientela.invioEmailPanel;
+import View.Manager.GestioneClientela.rigaGestioneUtentiPanel;
+import View.UtenteAcquirente.CommentoPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -42,6 +45,16 @@ public class ManagerListener implements ActionListener {
 
     private void rispostaCommenti(){
         System.out.println("Risposta commenti manager");
+
+        Home.getInstance().getNord().removeAll();
+        Home.getInstance().getNord().setLayout(new FlowLayout());
+        Home.getInstance().getNord().add(Home.getInstance().getBack());
+
+        Home.getInstance().getCentro().removeAll();
+        new RispostaPanel();
+        Home.getInstance().getEst().removeAll();
+        Home.getInstance().repaint();
+        Home.getInstance().validate();
 
     }
 

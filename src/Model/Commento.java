@@ -15,6 +15,13 @@ public class Commento {
     private Risposta risposta;
     private Data data;
 
+
+
+
+
+
+
+
     public int getId() {
         return id;
     }
@@ -110,3 +117,5 @@ public class Commento {
         this.articolo = articolo;
     }
 }
+
+

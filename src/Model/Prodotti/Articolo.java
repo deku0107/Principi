@@ -14,6 +14,9 @@ public class Articolo {
     private String id;
     private Immagine immagine;
 
+
+
+
     public String getNome() {
         return nome;
     }
@@ -77,3 +80,7 @@ public class Articolo {
         immagine.setPath(path);
     }
 }
+
+
+
+

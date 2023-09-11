@@ -4,10 +4,10 @@ import Buisness.SessionManager;
 import Buisness.Utente.UtenteBusiness;
 import Buisness.UtilityBuisness;
 import Model.Prodotti.Articolo;
-import ViewProveETest.Home;
-import ViewProveETest.Prove.UtenteAcquirente.CommentoPanel;
-import ViewProveETest.Prove.UtenteAcquirente.ModificaUtenteAcquirentePanel;
-import ViewProveETest.Prove.UtenteAcquirente.RegistrazioneUtenteAcquirentePanel;
+import View.Home;
+import View.UtenteAcquirente.CommentoPanel;
+import View.UtenteAcquirente.ModificaUtenteAcquirentePanel;
+import View.UtenteAcquirente.RegistrazioneUtenteAcquirentePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -248,8 +248,6 @@ public class UtenteAcquirenteListener implements ActionListener {
             finestra.getNord().removeAll();
             finestra.getNord().setLayout(new FlowLayout());
             finestra.getNord().add(finestra.getBack());
-            List<Articolo> articoloList = new ArrayList<>();
-            SessionManager.getSession().put(SessionManager.CARRELLO, articoloList);
             finestra.getCentro().removeAll();
             new CommentoPanel();
             finestra.getEst().removeAll();

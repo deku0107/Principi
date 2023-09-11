@@ -6,6 +6,8 @@ public class Composizione {
     private int quantita;
     private String id;
 
+
+
     public Articolo getArticolo() {
         return articolo;
     }
@@ -31,3 +33,5 @@ public class Composizione {
 
     }
 }
+
+
